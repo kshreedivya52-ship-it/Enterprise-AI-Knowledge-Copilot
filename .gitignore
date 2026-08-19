@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables (secrets)
+.env
+.env.local
+.env.*
+
+# Qdrant local storage
+qdrant_storage/
+qdrant_data/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
