@@ -1,4 +1,16 @@
+# Web Framework & Server
 fastapi>=0.100.0
-uvicorn>=0.22.0
-llama-parse>=0.4.0
+uvicorn[standard]>=0.22.0
+python-multipart>=0.0.9
 python-dotenv>=1.0.0
+
+# Document Parsing & Chunking
+llama-parse>=0.4.0
+langchain-text-splitters>=0.2.0
+
+# Vector Database & Hybrid Embeddings
+qdrant-client>=1.10.0
+fastembed>=0.3.0
+
+# Observability & Tracing
+langsmith>=0.1.0
