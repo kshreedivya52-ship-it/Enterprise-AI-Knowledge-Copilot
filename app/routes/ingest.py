@@ -34,8 +34,7 @@ async def upload_document(file: UploadFile = File(...)):
         return {
             "message": "Document ingested and indexed successfully",
             "filename": file.filename,
-            "total_chunks": len(chunks),
-            "page_content": [chunk["text"] for chunk in chunks],
+            "total_chunks": len(chunks)
         }
         
     except Exception as e:
