@@ -94,13 +94,12 @@ def upsert_document_chunks(chunks: List[Dict[str, Any]], filename: str):
     )
 
 @traceable(name="query hybrid search", run_type="tool")
-def query_hybrid_search(query_text: str, limit: int = 5) -> List[Dict[str, Any]]:
+def query_hybrid_search(query_text: str, limit: int = 10) -> List[Dict[str, Any]]:
     """
     Perform hybrid search (Dense Vector + SPLADE Sparse Vector) in Qdrant
     and merge the rankings using Reciprocal Rank Fusion (RRF).
     """
     init_qdrant()
-    
     # Generate embeddings for the search query
     query_dense = list(dense_model.embed([query_text]))[0].tolist()
     query_sparse = list(sparse_model.embed([query_text]))[0]
