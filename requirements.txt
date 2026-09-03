@@ -11,6 +11,8 @@ langchain-text-splitters>=0.2.0
 # Vector Database & Hybrid Embeddings
 qdrant-client>=1.10.0
 fastembed>=0.3.0
+cohere>=5.0.0
+
 
 # Observability & Tracing
 langsmith>=0.1.0

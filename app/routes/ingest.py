@@ -34,7 +34,9 @@ async def upload_document(file: UploadFile = File(...)):
         return {
             "message": "Document ingested and indexed successfully",
             "filename": file.filename,
-            "total_chunks": len(chunks)
+            "total_chunks": len(chunks),
+            "chunks": chunks,
+            # "markdown": markdown,
         }
         
     except Exception as e:

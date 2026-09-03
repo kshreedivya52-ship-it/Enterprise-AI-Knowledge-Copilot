@@ -10,6 +10,7 @@ from app.routes.api import router as items_router
 from app.routes.ingest import router as ingest_router
 from app.routes.search import router as search_router
 from app.core.vector_db import init_qdrant
+from app.core.reranker import get_reranker
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -63,4 +64,12 @@ async def root():
         "database_status": db_status,
         "active_services": list(app_state.keys())
     }
+
+
+# Inside lifespan(app: FastAPI):
+logger.info("Pre-loading BGE Reranker model...")
+get_reranker()
+logger.info("BGE Reranker ready.")
+
+    
 
