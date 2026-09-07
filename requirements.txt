@@ -13,6 +13,11 @@ qdrant-client>=1.10.0
 fastembed>=0.3.0
 cohere>=5.0.0
 
-
 # Observability & Tracing
 langsmith>=0.1.0
+
+# LLM & Structured Citations (Google AI Studio Gemini)
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-google-genai>=2.0.0
+pydantic>=2.0.0
