@@ -68,7 +68,7 @@ def get_gemini_llm(model_name: Optional[str] = None):
     Reads GOOGLE_API_KEY or GEMINI_API_KEY from the environment.
     """
     return ChatGoogleGenerativeAI(
-        model=model_name or os.getenv("GEMINI_MODEL", "gemini-1.5-flash"),
+        model=model_name or os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
         temperature=0.0,
         max_output_tokens=2048
     ).with_structured_output(RAGAnswer)
@@ -77,7 +77,7 @@ def get_gemini_llm(model_name: Optional[str] = None):
 # ---------------------------------------------------------------------------
 # 4. Main Traced Generation Function
 # ---------------------------------------------------------------------------
-@traceable(name="Gemini 2.5 Flash Citation Generation", run_type="chain")
+@traceable(name="gemini-2.0-flash Citation Generation", run_type="chain")
 async def generate_grounded_answer(
     query: str,
     documents: List[Dict[str, Any]],
