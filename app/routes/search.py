@@ -1,5 +1,4 @@
-# app/routes/search.py
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from langsmith import traceable
 from app.core.vector_db import query_hybrid_search
 from app.core.reranker import rerank_documents
@@ -15,22 +14,29 @@ async def search_endpoint(q: str):
     Exposes search to the web.
     E.g. GET http://localhost:8000/search?q=API timeout
     """
-    # 1. Hybrid retrieval(Dense + Sparse)
-    results = query_hybrid_search(query_text=q)
-    
-    # 2. Rerank to top 5 precision chunks
-    final_results = rerank_documents(query=q, documents=results, top_n=5)
+    try:
+        # 1. Hybrid retrieval(Dense + Sparse)
+        results = query_hybrid_search(query_text=q)
+        
+        # 2. Rerank to top 5 precision chunks
+        final_results = rerank_documents(query=q, documents=results, top_n=5)
 
-    # 3. Grounded generation with citation verification
-    rag_response = await generate_grounded_answer(query=q, documents=final_results)
-    return {
-        "query": q,
-        "answer": rag_response.answer,
-        "has_sufficient_context": rag_response.has_sufficient_context,
-        "citations": rag_response.citations,
-        "total_sources_cited": len(rag_response.citations),
-        "reranked_chunks": final_results
-    }
+        # 3. Grounded generation with citation verification
+        rag_response = await generate_grounded_answer(query=q, documents=final_results)
+        
+        return {
+            "query": q,
+            "answer": rag_response.answer,
+            "has_sufficient_context": rag_response.has_sufficient_context,
+            "citations": rag_response.citations,
+            "total_sources_cited": len(rag_response.citations),
+            "reranked_chunks": final_results
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Search pipeline error: {str(e)}"
+        )
 
 
 # # 2-stage hybrid search endpoint with reranking
