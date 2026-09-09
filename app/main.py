@@ -34,6 +34,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Failed to initialize Qdrant collection: {e}")
         
+    # Pre-load BGE Reranker model
+    logger.info("Pre-loading BGE Reranker model...")
+    try:
+        get_reranker()
+        logger.info("BGE Reranker ready.")
+    except Exception as e:
+        logger.error(f"Failed to pre-load BGE Reranker: {e}")
+
     logger.info(f"Resources initialized: {list(app_state.keys())}")
     
     yield
@@ -64,12 +72,3 @@ async def root():
         "database_status": db_status,
         "active_services": list(app_state.keys())
     }
-
-
-# Inside lifespan(app: FastAPI):
-logger.info("Pre-loading BGE Reranker model...")
-get_reranker()
-logger.info("BGE Reranker ready.")
-
-    
-
