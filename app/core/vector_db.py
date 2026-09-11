@@ -1,6 +1,6 @@
 import os
 import hashlib
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from qdrant_client import QdrantClient, models
 from fastembed import TextEmbedding, SparseTextEmbedding
 from langsmith import traceable
@@ -34,6 +34,12 @@ def init_qdrant():
                 "sparse": models.SparseVectorParams(),
             }
         )
+        # Index the 'department' field for fast RBAC metadata filtering
+        client.create_payload_index(
+            collection_name=COLLECTION_NAME,
+            field_name="department",
+            field_schema=models.PayloadSchemaType.KEYWORD,
+        )
 
 
 def _get_stable_id(text: str) -> int:
@@ -42,7 +48,11 @@ def _get_stable_id(text: str) -> int:
     return int(hashlib.md5(text.encode("utf-8")).hexdigest()[:8], 16)
 
 @traceable(name="save to qdrant", run_type="tool")
-def upsert_document_chunks(chunks: List[Dict[str, Any]], filename: str):
+def upsert_document_chunks(
+    chunks: List[Dict[str, Any]],
+    filename: str,
+    department: str = "general",
+):
     """
     Generate dense and sparse embeddings for a list of document chunks
     and upsert them with payload metadata into Qdrant.
@@ -70,6 +80,7 @@ def upsert_document_chunks(chunks: List[Dict[str, Any]], filename: str):
         payload = {
             "text": chunk["text"],
             "source_file": filename,
+            "department": department,
             **chunk["metadata"]
         }
         
@@ -94,24 +105,45 @@ def upsert_document_chunks(chunks: List[Dict[str, Any]], filename: str):
     )
 
 @traceable(name="query hybrid search", run_type="tool")
-def query_hybrid_search(query_text: str, limit: int = 10) -> List[Dict[str, Any]]:
+def query_hybrid_search(
+    query_text: str,
+    limit: int = 10,
+    department: Optional[str] = None,
+) -> List[Dict[str, Any]]:
     """
     Perform hybrid search (Dense Vector + SPLADE Sparse Vector) in Qdrant
     and merge the rankings using Reciprocal Rank Fusion (RRF).
+    
+    If department is provided, results are filtered to only include
+    chunks belonging to that department (RBAC metadata filtering).
+    If None (admin), no filter is applied.
     """
     init_qdrant()
     # Generate embeddings for the search query
     query_dense = list(dense_model.embed([query_text]))[0].tolist()
     query_sparse = list(sparse_model.embed([query_text]))[0]
-    
-    # Execute fused search
+
+    # Build Qdrant filter from user's department (None = no filter for admins)
+    qdrant_filter = None
+    if department:
+        qdrant_filter = models.Filter(
+            must=[
+                models.FieldCondition(
+                    key="department",
+                    match=models.MatchValue(value=department),
+                )
+            ]
+        )
+
+    # Execute fused search with RBAC filter applied at prefetch level
     results = client.query_points(
         collection_name=COLLECTION_NAME,
         prefetch=[
             models.Prefetch(
                 query=query_dense,
                 using="dense",
-                limit=20
+                limit=20,
+                filter=qdrant_filter,
             ),
             models.Prefetch(
                 query=models.SparseVector(
@@ -119,7 +151,8 @@ def query_hybrid_search(query_text: str, limit: int = 10) -> List[Dict[str, Any]
                     values=query_sparse.values.tolist()
                 ),
                 using="sparse",
-                limit=20
+                limit=20,
+                filter=qdrant_filter,
             )
         ],
         query=models.FusionQuery(
