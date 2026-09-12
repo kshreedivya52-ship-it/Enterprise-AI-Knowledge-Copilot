@@ -2,6 +2,7 @@ import os
 import hashlib
 from typing import List, Dict, Any, Optional
 from qdrant_client import QdrantClient, models
+from qdrant_client.models import Filter, FieldCondition, MatchValue
 from fastembed import TextEmbedding, SparseTextEmbedding
 from langsmith import traceable
 
@@ -51,7 +52,7 @@ def _get_stable_id(text: str) -> int:
 def upsert_document_chunks(
     chunks: List[Dict[str, Any]],
     filename: str,
-    department: str = "general",
+    department: str = "general",  # ← NEW: from authenticated user
 ):
     """
     Generate dense and sparse embeddings for a list of document chunks
@@ -80,7 +81,7 @@ def upsert_document_chunks(
         payload = {
             "text": chunk["text"],
             "source_file": filename,
-            "department": department,
+            "department": department,   #RBAC metadata tag
             **chunk["metadata"]
         }
         
@@ -109,6 +110,7 @@ def query_hybrid_search(
     query_text: str,
     limit: int = 10,
     department: Optional[str] = None,
+    
 ) -> List[Dict[str, Any]]:
     """
     Perform hybrid search (Dense Vector + SPLADE Sparse Vector) in Qdrant
@@ -153,7 +155,7 @@ def query_hybrid_search(
                 using="sparse",
                 limit=20,
                 filter=qdrant_filter,
-            )
+            ),
         ],
         query=models.FusionQuery(
             fusion=models.Fusion.RRF

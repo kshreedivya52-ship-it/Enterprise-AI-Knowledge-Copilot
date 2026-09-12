@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from langsmith import traceable
+from app.core.auth import get_current_user, CurrentUser
 from app.core.vector_db import query_hybrid_search
 from app.core.reranker import rerank_documents
 from app.core.llm import generate_grounded_answer
@@ -9,12 +10,17 @@ router = APIRouter(prefix="/search", tags=["search"])
 
 @router.get("")
 @traceable(name="hybrid search endpoint", run_type="chain")
-async def search_endpoint(q: str):
+async def search_endpoint(
+    q: str,
+    user: CurrentUser = Depends(get_current_user),  # ← Auth gate
+    ):
     """
     Exposes search to the web.
     E.g. GET http://localhost:8000/search?q=API timeout
     """
     try:
+        dept_filter = None if user.role == "admin" else user.department
+
         # 1. Hybrid retrieval(Dense + Sparse)
         results = query_hybrid_search(query_text=q)
         
@@ -26,6 +32,8 @@ async def search_endpoint(q: str):
         
         return {
             "query": q,
+            "user": user.sub,
+            "department_filter": dept_filter or"all (admin)",
             "answer": rag_response.answer,
             "has_sufficient_context": rag_response.has_sufficient_context,
             "citations": rag_response.citations,

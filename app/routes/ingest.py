@@ -1,4 +1,5 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
+from app.core.auth import require_role, CurrentUser
 from app.core.parser import parse_document
 from app.core.chunker import chunk_document
 from app.core.vector_db import upsert_document_chunks
@@ -10,7 +11,10 @@ router = APIRouter()
 
 
 @router.post("/upload")
-async def upload_document(file: UploadFile = File(...)):
+async def upload_document(
+    file: UploadFile = File(...),
+    user: CurrentUser = Depends(require_role("editor")),  # ← RBAC gate
+):
     """
     Upload a document, parse it, chunk it recursively, and index it into Qdrant.
     """
@@ -29,11 +33,13 @@ async def upload_document(file: UploadFile = File(...)):
         chunks = chunk_document(markdown, file.filename)
         
         # Index in Qdrant vector database (Dense + Sparse)
-        upsert_document_chunks(chunks, file.filename)
+        upsert_document_chunks(chunks, file.filename, department=user.department)
         
         return {
             "message": "Document ingested and indexed successfully",
             "filename": file.filename,
+            "uploaded_by": user.sub,
+            "department": user.department,
             "total_chunks": len(chunks),
             "chunks": chunks,
             # "markdown": markdown,
