@@ -119,8 +119,7 @@ def query_hybrid_search(
     If department is provided, results are filtered to only include
     chunks belonging to that department (RBAC metadata filtering).
     If None (admin), no filter is applied.
-    """
-    init_qdrant()
+    """    
     # Generate embeddings for the search query
     query_dense = list(dense_model.embed([query_text]))[0].tolist()
     query_sparse = list(sparse_model.embed([query_text]))[0]

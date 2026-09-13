@@ -22,7 +22,7 @@ async def search_endpoint(
         dept_filter = None if user.role == "admin" else user.department
 
         # 1. Hybrid retrieval(Dense + Sparse)
-        results = query_hybrid_search(query_text=q)
+        results = query_hybrid_search(query_text=q, department=dept_filter)
         
         # 2. Rerank to top 5 precision chunks
         final_results = rerank_documents(query=q, documents=results, top_n=5)

@@ -7,7 +7,7 @@ import tempfile
 import shutil
 import os
 
-router = APIRouter()
+router = APIRouter(prefix="/ingest", tags=["ingest"])
 
 
 @router.post("/upload")
