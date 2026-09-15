@@ -13,9 +13,7 @@ splitter = RecursiveCharacterTextSplitter(
 @traceable(name="Chunker", run_type="tool")
 def chunk_document(
     text: str,
-    filename: str,
-    chunk_size: int = 500,
-    chunk_overlap: int = 50
+    filename: str
 ) -> List[Dict[str, Any]]:
     """
     Splits a document text into recursive chunks and extracts metadata for each chunk.
