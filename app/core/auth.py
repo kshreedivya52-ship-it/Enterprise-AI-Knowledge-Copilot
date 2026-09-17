@@ -14,9 +14,10 @@ AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
 AUTH0_AUDIENCE = os.getenv("AUTH0_API_AUDIENCE")
 AUTH0_ALGORITHMS = [os.getenv("AUTH0_ALGORITHMS", "RS256")]
 CLAIM_NAMESPACE = os.getenv("AUTH0_CLAIM_NAMESPACE", "https://knowledge-copilot.local/")
+DEV_MODE = os.getenv("DEV_MODE", "false").lower() == "true"
 
-# FastAPI security scheme — extracts "Bearer <token>" from Authorization header
-security = HTTPBearer()
+# FastAPI security scheme — auto_error=False so we can handle missing tokens ourselves
+security = HTTPBearer(auto_error=False)
 
 
 # ──────────────────────────────────────────────
@@ -75,6 +76,22 @@ async def get_current_user(
     2. Validates it against Auth0's JWKS
     3. Returns a CurrentUser with role + department
     """
+    # DEV_MODE bypass — skip token validation for local development
+    if DEV_MODE:
+        return CurrentUser(
+            sub="dev-admin",
+            email="dev@localhost",
+            role="admin",
+            department="general",
+        )
+
+    # If no token provided and NOT in DEV_MODE, reject
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+        )
+
     token = credentials.credentials
 
     try:
