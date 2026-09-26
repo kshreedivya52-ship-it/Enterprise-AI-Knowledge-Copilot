@@ -16,8 +16,8 @@ class CitationItem(BaseModel):
 
 class RAGAnswer(BaseModel):
     answer: str
-    citations: List[CitationItem] = []
-    has_sufficient_context: bool = Field(description="False if context is insufficient")
+    citations: List[CitationItem] = Field(default_factory=list, description="List of citation items matching inline brackets")
+    has_sufficient_context: bool = Field(default=True, description="True if context is sufficient, False if context is insufficient")
 
 # ---------------------------------------------------------------------------
 # 2. Strict Grounding & Citation System Prompt
@@ -29,7 +29,8 @@ STRICT RULES:
 1. Grounding: Rely ONLY on facts stated directly in the <context>. Do NOT speculate, infer without evidence, or use outside knowledge.
 2. Inline Citations: Every single claim, fact, or bullet point MUST have an inline bracketed citation referencing the source ID, e.g. [1], [2], or [1][2].
 3. Exact Verbatim Quotes: In the citations list, extract the exact snippet from the source document that supports the claim.
-4. Missing Information: If the provided <context> does not contain enough relevant information to fully answer the question, state:
+4. Output Schema Fields: You MUST ALWAYS include and populate all JSON output fields (`answer`, `citations`, `has_sufficient_context`). Set `has_sufficient_context` to true when the context is sufficient, or false when context is insufficient.
+5. Missing Information: If the provided <context> does not contain enough relevant information to fully answer the question, state:
    "The provided enterprise documents do not contain sufficient information to answer this question."
    and set `has_sufficient_context` to false.
 """
@@ -70,7 +71,7 @@ def get_gemini_llm(model_name: Optional[str] = None):
     return ChatGoogleGenerativeAI(
         model=model_name or os.getenv("GEMINI_MODEL", "gemini-3.6-flash"),
         temperature=0.0,
-        max_output_tokens=2048
+        max_output_tokens=4096
     ).with_structured_output(RAGAnswer)
 
 
