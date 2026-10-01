@@ -9,7 +9,7 @@ load_dotenv()
 # Database connection string: postgresql+asyncpg://<user>:<password>@<host>:<port>/<dbname>
 DATABASE_URL = os.getenv(
     "DATABASE_URL", 
-    "postgresql+asyncpg://user:password@localhost:5432/copilot_db"
+    "postgresql+asyncpg://user:password@localhost:5433/copilot_db"
 )
 
 # 1. Engine: Manages connection pool to PostgreSQL using asyncpg driver

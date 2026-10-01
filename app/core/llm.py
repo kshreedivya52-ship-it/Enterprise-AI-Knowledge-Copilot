@@ -82,6 +82,7 @@ def get_gemini_llm(model_name: Optional[str] = None):
 async def generate_grounded_answer(
     query: str,
     documents: List[Dict[str, Any]],
+    chat_history: Optional[str] = None,
     model_name: Optional[str] = None
 ) -> RAGAnswer:
     """
@@ -90,6 +91,7 @@ async def generate_grounded_answer(
     Args:
         query: User search or question string.
         documents: List of reranked document chunks from stage 2.
+        chat_history: Formatted string of past conversation messages.
         model_name: Optional model override (defaults to gemini-3.6-flash).
         
     Returns:
@@ -98,10 +100,11 @@ async def generate_grounded_answer(
     """
     # 1. Format reranked chunks into XML context
     context_str = format_context_for_llm(documents)
+    history_str = chat_history or "No prior conversation history."
     
     # 2. Build structured chat prompt
     prompt_template = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_CITATION_PROMPT),
+        ("system", SYSTEM_CITATION_PROMPT + "\n\n<conversation_history>\n{chat_history}\n</conversation_history>"),
         ("human", "Here is the retrieved context:\n{context}\n\nUser Question: {question}\n\nProvide a grounded answer with inline citations:")
     ])
     
@@ -111,6 +114,7 @@ async def generate_grounded_answer(
     # 4. Invoke LLM asynchronously
     result: RAGAnswer = await chain.ainvoke({
         "context": context_str,
+        "chat_history": history_str,
         "question": query
     })
     
