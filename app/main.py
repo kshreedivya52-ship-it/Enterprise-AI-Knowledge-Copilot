@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from app.routes.api import router as items_router
 from app.routes.ingest import router as ingest_router
 from app.routes.search import router as search_router
+from app.routes.conversations import router as conversations_router
 from app.core.vector_db import init_qdrant
 from app.core.reranker import get_reranker
 
@@ -62,6 +63,7 @@ app = FastAPI(
 app.include_router(items_router)
 app.include_router(ingest_router)
 app.include_router(search_router)
+app.include_router(conversations_router)
 
 @app.get("/")
 async def root():
