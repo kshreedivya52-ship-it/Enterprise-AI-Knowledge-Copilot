@@ -19,6 +19,15 @@ DEV_MODE = os.getenv("DEV_MODE", "false").lower() == "true"
 # FastAPI security scheme — auto_error=False so we can handle missing tokens ourselves
 security = HTTPBearer(auto_error=False)
 
+LOCAL_JWT_SECRET = os.getenv("JWT_SECRET", "copilot-local-secret-key-2026")
+
+
+def create_access_token(data: dict) -> str:
+    """Creates a local JWT signed with HS256."""
+    to_encode = data.copy()
+    return jwt.encode(to_encode, LOCAL_JWT_SECRET, algorithm="HS256")
+
+
 
 # ──────────────────────────────────────────────
 # 2. Pydantic model for the authenticated user
@@ -73,11 +82,50 @@ async def get_current_user(
     """
     FastAPI dependency that:
     1. Extracts the Bearer token
-    2. Validates it against Auth0's JWKS
-    3. Returns a CurrentUser with role + department
+    2. Validates against Local JWT (HS256) or Auth0 (RS256)
+    3. Returns CurrentUser with user ID (sub), role, and department
     """
-    # DEV_MODE bypass — skip token validation for local development
-    if DEV_MODE:
+    if credentials is not None:
+        token = credentials.credentials
+
+        # 1. Try Local JWT first (HS256)
+        try:
+            payload = jwt.decode(
+                token,
+                LOCAL_JWT_SECRET,
+                algorithms=["HS256"],
+            )
+            return CurrentUser(
+                sub=payload.get("sub", "anonymous"),
+                email=payload.get("email"),
+                role=payload.get("role", "viewer"),
+                department=payload.get("department", "general"),
+            )
+        except JWTError:
+            pass
+
+        # 2. Try Auth0 RSA JWT
+        if AUTH0_DOMAIN:
+            try:
+                signing_key = _get_signing_key(token)
+                payload = jwt.decode(
+                    token,
+                    signing_key,
+                    algorithms=AUTH0_ALGORITHMS,
+                    audience=AUTH0_AUDIENCE,
+                    issuer=f"https://{AUTH0_DOMAIN}/",
+                )
+                return CurrentUser(
+                    sub=payload.get("sub", ""),
+                    email=payload.get(f"{CLAIM_NAMESPACE}email", payload.get("email")),
+                    role=payload.get(f"{CLAIM_NAMESPACE}role", "viewer"),
+                    department=payload.get(f"{CLAIM_NAMESPACE}department", "general"),
+                )
+            except Exception:
+                pass
+
+    # DEV_MODE bypass ONLY if no token was passed
+    if DEV_MODE and credentials is None:
         return CurrentUser(
             sub="dev-admin",
             email="dev@localhost",
@@ -85,37 +133,11 @@ async def get_current_user(
             department="general",
         )
 
-    # If no token provided and NOT in DEV_MODE, reject
-    if credentials is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-        )
-
-    token = credentials.credentials
-
-    try:
-        signing_key = _get_signing_key(token)
-        payload = jwt.decode(
-            token,
-            signing_key,
-            algorithms=AUTH0_ALGORITHMS,
-            audience=AUTH0_AUDIENCE,
-            issuer=f"https://{AUTH0_DOMAIN}/",
-        )
-    except JWTError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token validation failed: {str(e)}",
-        )
-
-    # Extract custom claims (namespaced)
-    return CurrentUser(
-        sub=payload.get("sub", ""),
-        email=payload.get(f"{CLAIM_NAMESPACE}email", payload.get("email")),
-        role=payload.get(f"{CLAIM_NAMESPACE}role", "viewer"),
-        department=payload.get(f"{CLAIM_NAMESPACE}department", "general"),
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Not authenticated or invalid token",
     )
+
 
 
 # ──────────────────────────────────────────────

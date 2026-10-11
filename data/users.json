@@ -1,0 +1,17 @@
+{
+  "admin": {
+    "password_hash": "2fdc2efde894ed592cd024f571dc913437f24487f519976594d1d810293c13d9",
+    "role": "admin",
+    "department": "general"
+  },
+  "user": {
+    "password_hash": "d7b43b4ddcdd34c5f3482225cfe8ed1f0dcfaa8a80d99853011229f47228c1c0",
+    "role": "editor",
+    "department": "engineering"
+  },
+  "divya": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "general"
+  }
+}
