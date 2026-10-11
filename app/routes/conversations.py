@@ -10,7 +10,14 @@ from app.crud.chat import (
     list_user_conversations,
     get_conversation_messages,
     delete_conversation,
+    rename_conversation,
 )
+from pydantic import BaseModel, Field
+
+
+class RenameConversationRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=255, description="New title for the conversation")
+
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
@@ -95,3 +102,33 @@ async def delete_conversation_endpoint(
             detail="Conversation thread not found or access denied."
         )
     return {"message": f"Conversation session '{session_id}' deleted successfully."}
+
+
+@router.patch("/{session_id}")
+async def rename_conversation_endpoint(
+    session_id: str,
+    payload: RenameConversationRequest,
+    user: CurrentUser = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Renames a conversation session title.
+    """
+    updated = await rename_conversation(
+        db=db,
+        conversation_id=session_id,
+        user_id=user.sub,
+        title=payload.title
+    )
+    if not updated:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Conversation thread not found or access denied."
+        )
+    return {
+        "id": updated.id,
+        "title": updated.title,
+        "updated_at": updated.updated_at,
+        "message": "Conversation renamed successfully."
+    }
+

@@ -116,3 +116,29 @@ async def delete_conversation(
     await db.delete(conversation)
     await db.commit()
     return True
+
+
+# 6. Update conversation title
+async def rename_conversation(
+    db: AsyncSession,
+    conversation_id: str,
+    user_id: str,
+    title: str
+) -> Optional[Conversation]:
+    """
+    Updates the title of an existing conversation thread for a given user.
+    """
+    stmt = select(Conversation).where(
+        Conversation.id == conversation_id,
+        Conversation.user_id == user_id
+    )
+    result = await db.execute(stmt)
+    conversation = result.scalars().first()
+    if not conversation:
+        return None
+
+    conversation.title = title
+    await db.commit()
+    await db.refresh(conversation)
+    return conversation
+

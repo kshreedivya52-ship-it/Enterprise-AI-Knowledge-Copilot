@@ -42,10 +42,12 @@ venv\Scripts\activate
 docker compose up -d
 docker ps
 uvicorn app.main:app --reload
+streamlit run streamlit_app.py
 
 Then:
 
-http://127.0.0.1:8000/docs
+- API Docs: http://127.0.0.1:8000/docs
+- Web UI: http://localhost:8501
 
 
 🏷️ Recommended GitHub Topics / Tags:
