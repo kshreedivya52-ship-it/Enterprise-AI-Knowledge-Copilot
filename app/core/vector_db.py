@@ -7,7 +7,9 @@ from fastembed import TextEmbedding, SparseTextEmbedding
 from langsmith import traceable
 
 # Initialize Client
-client = QdrantClient("http://localhost:6333")
+qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")
+qdrant_api_key = os.getenv("QDRANT_API_KEY", None)
+client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key)
 COLLECTION_NAME = "hybrid_knowledge_base"
 
 # Load BGE for semantic search (384 dimensions)
@@ -22,31 +24,34 @@ def init_qdrant():
     Safely initialize Qdrant collection with both Dense and Sparse configurations
     if it does not already exist.
     """
-    if not client.collection_exists(COLLECTION_NAME):
-        client.create_collection(
-            collection_name=COLLECTION_NAME,
-            vectors_config={
-                "dense": models.VectorParams(
-                    size=384, 
-                    distance=models.Distance.COSINE
-                ),
-            },
-            sparse_vectors_config={
-                "sparse": models.SparseVectorParams(),
-            }
-        )
-        # Index the 'department' field for fast RBAC metadata filtering
-        client.create_payload_index(
-            collection_name=COLLECTION_NAME,
-            field_name="department",
-            field_schema=models.PayloadSchemaType.KEYWORD,
-        )
+    try:
+        if not client.collection_exists(COLLECTION_NAME):
+            client.create_collection(
+                collection_name=COLLECTION_NAME,
+                vectors_config={
+                    "dense": models.VectorParams(
+                        size=384, 
+                        distance=models.Distance.COSINE
+                    ),
+                },
+                sparse_vectors_config={
+                    "sparse": models.SparseVectorParams(),
+                }
+            )
+            # Index the 'department' field for fast RBAC metadata filtering
+            client.create_payload_index(
+                collection_name=COLLECTION_NAME,
+                field_name="department",
+                field_schema=models.PayloadSchemaType.KEYWORD,
+            )
+    except Exception:
+        pass
 
 
-def _get_stable_id(text: str) -> int:
-    """Helper to generate a stable positive 32-bit integer ID from text."""
-    # Using hashlib MD5 to guarantee stability across environments (standard Python hash() is randomized per process)
-    return int(hashlib.md5(text.encode("utf-8")).hexdigest()[:8], 16)
+def _get_stable_id(text: str, filename: str = "", chunk_index: int = 0) -> int:
+    """Helper to generate a stable positive 60-bit integer ID from text and document metadata."""
+    seed = f"{filename}::{chunk_index}::{text}" if filename else text
+    return int(hashlib.md5(seed.encode("utf-8")).hexdigest()[:15], 16)
 
 @traceable(name="save to qdrant", run_type="tool")
 def upsert_document_chunks(
@@ -74,16 +79,23 @@ def upsert_document_chunks(
         dense_vec = dense_embeddings[i].tolist()
         sparse_vec = sparse_embeddings[i]
         
-        # Prepare Qdrant point structure
-        point_id = _get_stable_id(chunk["text"])
+        chunk_idx = chunk.get("chunk_index", chunk.get("metadata", {}).get("chunk_index", i))
+        base_name = os.path.basename(filename)
+
+        # Prepare Qdrant point structure with collision-resistant ID
+        point_id = _get_stable_id(chunk["text"], filename=base_name, chunk_index=chunk_idx)
         
         # Combine text and chunk metadata into the payload
         payload = {
             "text": chunk["text"],
-            "source_file": filename,
-            "department": department,   #RBAC metadata tag
-            **chunk["metadata"]
+            "source_file": base_name,
+            "department": department,   # RBAC metadata tag
+            "chunk_index": chunk_idx,
+            **chunk.get("metadata", {})
         }
+        # Ensure canonical metadata fields are always preserved
+        payload["source_file"] = base_name
+        payload["chunk_index"] = chunk_idx
         
         points.append(
             models.PointStruct(
@@ -137,38 +149,42 @@ def query_hybrid_search(
         )
 
     # Execute fused search with RBAC filter applied at prefetch level
-    results = client.query_points(
-        collection_name=COLLECTION_NAME,
-        prefetch=[
-            models.Prefetch(
-                query=query_dense,
-                using="dense",
-                limit=20,
-                filter=qdrant_filter,
-            ),
-            models.Prefetch(
-                query=models.SparseVector(
-                    indices=query_sparse.indices.tolist(),
-                    values=query_sparse.values.tolist()
+    try:
+        init_qdrant()
+        results = client.query_points(
+            collection_name=COLLECTION_NAME,
+            prefetch=[
+                models.Prefetch(
+                    query=query_dense,
+                    using="dense",
+                    limit=20,
+                    filter=qdrant_filter,
                 ),
-                using="sparse",
-                limit=20,
-                filter=qdrant_filter,
+                models.Prefetch(
+                    query=models.SparseVector(
+                        indices=query_sparse.indices.tolist(),
+                        values=query_sparse.values.tolist()
+                    ),
+                    using="sparse",
+                    limit=20,
+                    filter=qdrant_filter,
+                ),
+            ],
+            query=models.FusionQuery(
+                fusion=models.Fusion.RRF
             ),
-        ],
-        query=models.FusionQuery(
-            fusion=models.Fusion.RRF
-        ),
-        limit=limit
-    )
-    
-    # Format and return matched items
-    return [
-        {
-            "score": hit.score,
-            "id": hit.id,
-            "text": hit.payload.get("text"),
-            "metadata": {k: v for k, v in hit.payload.items() if k != "text"}
-        }
-        for hit in results.points
-    ]
+            limit=limit
+        )
+        
+        # Format and return matched items
+        return [
+            {
+                "score": hit.score,
+                "id": hit.id,
+                "text": hit.payload.get("text"),
+                "metadata": {k: v for k, v in hit.payload.items() if k != "text"}
+            }
+            for hit in results.points
+        ]
+    except Exception:
+        return []

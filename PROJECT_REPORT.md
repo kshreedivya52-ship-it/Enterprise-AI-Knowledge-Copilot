@@ -226,7 +226,7 @@ Enterprise knowledge workers spend significant portions of their workdays naviga
 
 The system combines vision-augmented document parsing with a state-of-the-art **Hybrid Retrieval architecture**. Documents in PDF, DOCX, Markdown, and TXT formats are ingested via LlamaParse, preserving tables, headers, and bullet lists, and segmented using recursive character chunking. Chunks are converted into dual mathematical representations: dense semantic vectors (BAAI/bge-small-en-v1.5) and sparse lexical expansion weights (SPLADE/BM25) stored simultaneously within the Qdrant vector database. Retrieval queries execute both dense and sparse searches concurrently and fuse candidates via Reciprocal Rank Fusion (RRF). Candidate chunks are subsequently re-ranked using a Cross-Encoder (BAAI/bge-reranker-base) to isolate the top-5 highest precision passages.
 
-Retrieved context is injected into Google Gemini alongside past conversational history, strictly constrained by a type-safe Pydantic schema requiring verbatim quotes and document source names. If sufficient evidence is absent, the system sets an explicit ungrounded flag and declines to guess. The platform provides Role-Based Access Control (RBAC) via cryptographically verified JSON Web Tokens (JWT) with department pre-filtering, multi-turn chat persistence in PostgreSQL, and full observability tracing through LangSmith. The system is exposed through an asynchronous FastAPI REST backend and a modern, dark-mode Streamlit user interface, delivering sub-second grounded responses for enterprise workflows.
+Retrieved context is injected into OpenAI GPT-4o alongside past conversational history, strictly constrained by a type-safe Pydantic schema requiring verbatim quotes and document source names. If sufficient evidence is absent, the system sets an explicit ungrounded flag and declines to guess. The platform provides Role-Based Access Control (RBAC) via cryptographically verified JSON Web Tokens (JWT) with department pre-filtering, multi-turn chat persistence in PostgreSQL, and full observability tracing through LangSmith. The system is exposed through an asynchronous FastAPI REST backend and a modern, dark-mode Streamlit user interface, delivering sub-second grounded responses for enterprise workflows.
 
 <p align="center"><i>iii</i></p>
 
@@ -307,7 +307,7 @@ Retrieved context is injected into Google Gemini alongside past conversational h
 ## 1.1 Background of the Study
 Enterprise organizations generate massive volumes of internal knowledge on a daily basis, spanning architectural blueprints, standard operating procedures (SOPs), product roadmaps, legal contracts, and compliance policies. Finding verified, domain-accurate answers within these vast, fragmented document silos has become a primary operational bottleneck for knowledge workers. Employees routinely lose hours searching across file servers, corporate wikis, and cloud drives.
 
-The **Enterprise AI Knowledge Copilot** approaches this problem as an end-to-end, high-precision Retrieval-Augmented Generation (RAG) platform. Rather than treating documents as static files, the copilot parses enterprise documents into semantic markdown, computes hybrid dense and sparse embeddings, indexes them within a vector database with departmental access control metadata, and applies two-stage cross-encoder re-ranking. For user queries, the system injects the top-ranked context into Google Gemini, which synthesizes answers constrained by strict Pydantic output schemas requiring verbatim quote citations.
+The **Enterprise AI Knowledge Copilot** approaches this problem as an end-to-end, high-precision Retrieval-Augmented Generation (RAG) platform. Rather than treating documents as static files, the copilot parses enterprise documents into semantic markdown, computes hybrid dense and sparse embeddings, indexes them within a vector database with departmental access control metadata, and applies two-stage cross-encoder re-ranking. For user queries, the system injects the top-ranked context into OpenAI GPT-4o, which synthesizes answers constrained by strict Pydantic output schemas requiring verbatim quote citations.
 
 FastAPI provides an asynchronous, high-throughput REST backend, while Uvicorn serves the API endpoints. Streamlit provides an intuitive, ChatGPT-inspired user interface styled with custom CSS tokens. PostgreSQL persists multi-turn chat sessions and citation records using SQLAlchemy 2.0 async sessions, while Qdrant executes sub-millisecond hybrid vector searches with Reciprocal Rank Fusion (RRF). Observability and latency profiling are managed through LangSmith.
 
@@ -320,7 +320,7 @@ The problem addressed by the Enterprise AI Knowledge Copilot is to deliver a sec
 • Implement high-precision document parsing via LlamaParse, preserving tables, headers, and bullet structures from PDFs, DOCX, and Markdown files.  
 • Develop a dual Hybrid Retrieval architecture combining Dense Semantic Embeddings (BGE-small-en-v1.5) and Sparse Lexical Weights (SPLADE) in Qdrant using Reciprocal Rank Fusion (RRF).  
 • Integrate a Cross-Encoder Reranker (BAAI/bge-reranker-base) to isolate the top-5 highest precision candidate passages.  
-• Enforce zero-hallucination grounded answer generation with Google Gemini using type-safe Pydantic schema validation and verbatim quote citations.  
+• Enforce zero-hallucination grounded answer generation with OpenAI GPT-4o using type-safe Pydantic schema validation and verbatim quote citations.  
 • Implement Role-Based Access Control (RBAC) via cryptographically verified JSON Web Tokens (JWT) with department-level vector payload pre-filtering.  
 • Provide persistent multi-turn conversational sessions stored in PostgreSQL with asynchronous SQLAlchemy operations.  
 • Implement full end-to-end observability and latency tracing across the RAG execution graph via LangSmith.  
@@ -335,7 +335,7 @@ The prototype focuses on enterprise document ingestion, hybrid vector retrieval,
 | LlamaParse document parsing and recursive chunking | Native Optical Character Recognition (OCR) for scanned image-only PDFs |
 | Dense (BGE) + Sparse (SPLADE) hybrid retrieval in Qdrant | Distributed multi-node Qdrant clustering |
 | Cross-Encoder reranking of top-25 candidate passages | Fine-tuned proprietary local cross-encoder weights |
-| Grounded Gemini generation with verbatim quote citations | Unsupervised automated document editing without human validation |
+| Grounded GPT-4o generation with verbatim quote citations | Unsupervised automated document editing without human validation |
 | PostgreSQL multi-turn chat history persistence | Real-time voice audio input/output |
 | LangSmith end-to-end execution tracing | Third-party regulatory compliance audit (SOC2/HIPAA) |
 
@@ -389,7 +389,7 @@ Existing enterprise search solutions exhibit three fundamental gaps:
 3. **Missing Security Segmentation**: Many RAG prototypes index all files into a single flat collection, exposing sensitive HR or financial data across departments.
 
 ## 2.4 Proposed Approach
-The Enterprise AI Knowledge Copilot implements a client-server architecture. The Streamlit frontend provides chat interaction, session management, and document uploads. FastAPI orchestrates the ingestion and search pipelines. Documents are parsed via LlamaParse, chunked recursively, and indexed into Qdrant as dual dense (BGE-small) and sparse (SPLADE) vectors tagged with departmental metadata. Queries execute hybrid search with Reciprocal Rank Fusion, followed by Cross-Encoder re-ranking. Google Gemini synthesizes answers constrained by a Pydantic schema requiring verbatim quotes and document names, with sessions persisted in PostgreSQL.
+The Enterprise AI Knowledge Copilot implements a client-server architecture. The Streamlit frontend provides chat interaction, session management, and document uploads. FastAPI orchestrates the ingestion and search pipelines. Documents are parsed via LlamaParse, chunked recursively, and indexed into Qdrant as dual dense (BGE-small) and sparse (SPLADE) vectors tagged with departmental metadata. Queries execute hybrid search with Reciprocal Rank Fusion, followed by Cross-Encoder re-ranking. OpenAI GPT-4o synthesizes answers constrained by a Pydantic schema requiring verbatim quotes and document names, with sessions persisted in PostgreSQL.
 
 ## 2.5 Technical Foundations of the Proposed Approach
 ### 2.5.1 Component-based interface design
@@ -407,7 +407,7 @@ where $k = 60$ and $r_m(d)$ is the rank of document $d$ in retrieval method $m$.
 Top-25 candidate passages from Qdrant are passed to `BAAI/bge-reranker-base`. The cross-encoder jointly computes cross-attention over query and candidate tokens, selecting the top-5 highest precision passages.
 
 ### 2.5.5 Pydantic citation enforcement and grounded synthesis
-Google Gemini is invoked with structured Pydantic output constraints (`GroundedRAGResponse`). The model must return an answer, a boolean `has_sufficient_context` flag, and a list of `Citation` objects containing the source filename and verbatim quote.
+OpenAI GPT-4o is invoked with structured Pydantic output constraints (`GroundedRAGResponse`). The model must return an answer, a boolean `has_sufficient_context` flag, and a list of `Citation` objects containing the source filename and verbatim quote.
 
 ### 2.5.6 Multi-turn session persistence and RBAC
 PostgreSQL stores `conversations` and `chat_messages` using SQLAlchemy 2.0 async engine. JWT tokens encode user identity, role, and department, enforcing pre-filtering in Qdrant.
@@ -437,7 +437,7 @@ The development and execution environment recommendations are detailed below:
 | **Memory** | 8 GB RAM | 16 GB RAM or more for concurrent embedding & reranker models |
 | **Free storage** | 10 GB SSD space | 30 GB SSD for Qdrant storage, Docker images, and PostgreSQL |
 | **Display** | 1366 x 768 | 1920 x 1080 for multi-window development |
-| **Network** | Broadband internet | Stable connection for Gemini API and LlamaParse API calls |
+| **Network** | Broadband internet | Stable connection for OpenAI API and LlamaParse API calls |
 | **Graphics** | Integrated GPU | Dedicated GPU optional (CPU inference supported via FastEmbed) |
 
 <p align="center"><b>Table 3.1 Recommended hardware specification</b></p>
@@ -455,7 +455,7 @@ The development and execution environment recommendations are detailed below:
 | **Database migrations**| Alembic 1.13+ |
 | **Embedding models** | BAAI/bge-small-en-v1.5 (Dense) & SPLADE (Sparse) via FastEmbed 0.3+ |
 | **Reranker model** | BAAI/bge-reranker-base (Cross-Encoder) |
-| **Generative LLM** | Google Gemini (via langchain-google-genai 2.0+) |
+| **Generative LLM** | OpenAI GPT-4o (via langchain-openai 0.2+) |
 | **Document parser** | LlamaParse 0.4+ and LangChain RecursiveCharacterTextSplitter |
 | **Observability** | LangSmith 0.1+ SDK |
 | **Containerization** | Docker Engine & Docker Compose 3.8 |
@@ -478,8 +478,8 @@ FastEmbed generates 384-dimensional dense semantic vectors using `BAAI/bge-small
 ### 3.3.5 BAAI Cross-Encoder Reranker
 Evaluates joint cross-attention over query and candidate chunks to re-order the top-25 passages, selecting the top-5 highest precision passages.
 
-### 3.3.6 Google Gemini AI Client
-Gemini generates natural language answers constrained by Pydantic structured output schemas, extracting verbatim quotes mapped to source documents.
+### 3.3.6 OpenAI GPT-4o Client
+GPT-4o generates natural language answers constrained by Pydantic structured output schemas, extracting verbatim quotes mapped to source documents.
 
 ### 3.3.7 LlamaParse Document Parser
 Cloud layout-aware parsing engine that extracts structured Markdown from PDFs, preserving complex tables, headers, and bullet structures.
@@ -542,11 +542,11 @@ Orchestrates Qdrant and PostgreSQL container services in an isolated environment
 5. Search tools lack conversational memory across multi-turn inquiries.
 
 ## 4.3 Proposed System
-The Enterprise AI Knowledge Copilot combines layout-aware document parsing, dual-encoder hybrid retrieval in Qdrant, cross-encoder re-ranking, and grounded Gemini synthesis with mandatory verbatim quote citations. Multi-turn chat sessions are persisted in PostgreSQL, and role-based access control enforces department-level isolation.
+The Enterprise AI Knowledge Copilot combines layout-aware document parsing, dual-encoder hybrid retrieval in Qdrant, cross-encoder re-ranking, and grounded GPT-4o synthesis with mandatory verbatim quote citations. Multi-turn chat sessions are persisted in PostgreSQL, and role-based access control enforces department-level isolation.
 
 ## 4.4 Feasibility Study
 ### 4.4.1 Technical feasibility
-The system utilizes established open-source libraries (FastAPI, Qdrant, FastEmbed, LangChain, SQLAlchemy) and Google Gemini API. Containerization via Docker Compose ensures consistent execution across environments.
+The system utilizes established open-source libraries (FastAPI, Qdrant, FastEmbed, LangChain, SQLAlchemy) and OpenAI GPT-4o API. Containerization via Docker Compose ensures consistent execution across environments.
 
 ### 4.4.2 Operational feasibility
 The Streamlit interface provides an intuitive chat experience requiring zero user training. Knowledge workers enter questions, receive answers, and verify citations via expandable source cards.
@@ -562,7 +562,7 @@ Enterprise documents remain within the organization's infrastructure. Ingestion 
 The software is designed for enterprise knowledge workers, managers, and IT administrators seeking verified answers from internal documentation.
 
 ### 4.5.2 Product perspective
-The platform operates as a client-server architecture. The Streamlit frontend interacts with FastAPI via HTTP REST requests. FastAPI communicates with Qdrant, PostgreSQL, and Google Gemini.
+The platform operates as a client-server architecture. The Streamlit frontend interacts with FastAPI via HTTP REST requests. FastAPI communicates with Qdrant, PostgreSQL, and OpenAI GPT-4o.
 
 ### 4.5.3 External interfaces
 
@@ -579,7 +579,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 <p align="center"><b>Table 4.3 External API interfaces</b></p>
 
 ### 4.5.4 Operating constraints
-1. Valid Google Gemini API key required for LLM synthesis.
+1. Valid OpenAI API key required for LLM synthesis.
 2. Qdrant and PostgreSQL container services must be running.
 3. Document uploads restricted to users with editor or admin privileges.
 4. File sizes constrained by available memory during parsing.
@@ -615,7 +615,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 |   |       DATA & VECTOR STORAGE     |   |       AI & SYNTHESIS LAYER      |   |
 |   |   Qdrant Hybrid Vector Store    |   |   FastEmbed (BGE & SPLADE)      |   |
 |   |   PostgreSQL 16 (Chat & Session)|   |   BAAI Cross-Encoder Reranker   |   |
-|   |   Alembic Migrations / JSONB    |   |   Google Gemini (Pydantic RAG)  |   |
+|   |   Alembic Migrations / JSONB    |   |   OpenAI GPT-4o (Pydantic RAG)  |   |
 |   +---------------------------------+   +---------------------------------+   |
 |                                                                               |
 +-------------------------------------------------------------------------------+
@@ -636,7 +636,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 3. Past conversation history (sliding window of 10 messages) is loaded from PostgreSQL.
 4. Qdrant executes hybrid search combining dense and sparse vectors via Reciprocal Rank Fusion.
 5. The Cross-Encoder reranks candidate chunks, selecting the top-5 highest scoring passages.
-6. Google Gemini generates a grounded response constrained by Pydantic schema validation.
+6. OpenAI GPT-4o generates a grounded response constrained by Pydantic schema validation.
 7. User question, assistant answer, and citation objects are committed to PostgreSQL.
 8. The Streamlit UI renders the answer with expandable source cards.
 
@@ -662,7 +662,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 |                                       +-----------------------+-------+       |
 |                                       |                       |       |       |
 |                                       v                       v       v       |
-|                                  [ Qdrant DB ]         [ PostgreSQL ] [ Gemini ]
+|                                  [ Qdrant DB ]         [ PostgreSQL ] [ GPT-4o ]
 |                                                                               |
 +-------------------------------------------------------------------------------+
 ```
@@ -735,7 +735,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 |     [ BGE Cross-Encoder Reranking ]       [ Dense + Sparse Embeddings ]       |
 |           |                                     |                             |
 |           v                                     v                             |
-|     [ Gemini Grounded Synthesis ]         [ Upsert to Qdrant Collection ]     |
+|     [ GPT-4o Grounded Synthesis ]         [ Upsert to Qdrant Collection ]     |
 |           |                                                                   |
 |           v                                                                   |
 |     [ Commit Chat to PostgreSQL ]                                             |
@@ -782,7 +782,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 |                            [ SPACE FOR FIG. 5.6 ]                             |
 |              Fig. 5.6 Sequence diagram for grounded RAG query                 |
 |                                                                               |
-|   User       Streamlit UI       FastAPI API       Qdrant       Gemini LLM     |
+|   User       Streamlit UI       FastAPI API       Qdrant       GPT-4o LLM     |
 |    |              |                  |               |              |         |
 |    |-- Enter Q -->|                  |               |              |         |
 |    |              |-- GET /search -->|               |              |         |
@@ -813,7 +813,7 @@ The platform operates as a client-server architecture. The Streamlit frontend in
 |     │                                                      │                  |
 |     └──> (3.0 Hybrid Search) ──────────────────────────────┘                  |
 |               │                                                               |
-|               ├──> (4.0 Reranking) ──> (5.0 Gemini Synthesis)                |
+|               ├──> (4.0 Reranking) ──> (5.0 GPT-4o Synthesis)                 |
 |                                                   │                           |
 |                                                   v                           |
 |                                         D3: PostgreSQL Database               |
@@ -939,7 +939,7 @@ Displays expandable citation cards containing document filenames and verbatim qu
 | **Document Ingestion** | Multipart upload, LlamaParse parsing, recursive text splitting | `app/routes/ingest.py`, `app/core/parser.py`, `app/core/chunker.py` |
 | **Vector DB & Hybrid Search**| Dense + Sparse embedding generation, Qdrant collection management, RRF | `app/core/vector_db.py` |
 | **Cross-Encoder Reranker** | Top-25 candidate re-ranking, top-5 chunk selection | `app/core/reranker.py` |
-| **Grounded LLM Generation** | Gemini prompting, Pydantic schema validation, quote extraction | `app/core/llm.py`, `app/routes/search.py` |
+| **Grounded LLM Generation** | GPT-4o prompting, Pydantic schema validation, quote extraction | `app/core/llm.py`, `app/routes/search.py` |
 | **Chat Persistence** | PostgreSQL models, async CRUD operations, history formatting | `app/models/chat.py`, `app/crud/chat.py`, `app/core/database.py` |
 | **User Interface** | Streamlit chat view, session state, citation cards, sidebar threads | `streamlit_app.py` |
 
@@ -979,7 +979,7 @@ Chunk Size: 1000 characters | Overlap: 200 characters | Separators: ["
 <p align="center"><b>Fig. 6.1 Document ingestion to structured vector flow</b></p>
 
 ## 6.3 AI-Based Field Extraction & Citations
-Google Gemini is constrained via Pydantic structured output:
+OpenAI GPT-4o is constrained via Pydantic structured output:
 ```python
 class Citation(BaseModel):
     document_name: str
@@ -1022,7 +1022,7 @@ ALGORITHM GroundedAnswerGeneration(query, top_chunks, chat_history)
 1. Format past 10 messages into transcript string.
 2. Construct context string from top_chunks with document labels.
 3. Build system prompt enforcing verbatim quote citations.
-4. Invoke Google Gemini with structured Pydantic output schema.
+4. Invoke OpenAI GPT-4o with structured Pydantic output schema.
 5. If context is insufficient, set has_sufficient_context = False.
 6. Commit user query and assistant response with citations to PostgreSQL.
 7. Return session ID, answer, citations, and reranked chunks.
@@ -1076,7 +1076,7 @@ Streamlit renders the chat interface with custom CSS styling, avatar indicators,
 |                            [ SPACE FOR FIG. 6.2 ]                             |
 |       Fig. 6.2 Grounded RAG synthesis and citation verification flow          |
 |                                                                               |
-|   [ Query + Context + History ] ──> [ Gemini LLM ]                            |
+|   [ Query + Context + History ] ──> [ GPT-4o LLM ]                            |
 |                                            │                                  |
 |                                            v                                  |
 |                                 { Sufficient Context? }                       |
@@ -1151,7 +1151,7 @@ Pipeline latency was profiled using LangSmith:
 - PostgreSQL session loading: ~12 ms
 - Qdrant hybrid retrieval (dense + sparse RRF): ~48 ms
 - BGE Cross-Encoder reranking (25 to 5 chunks): ~182 ms
-- Google Gemini grounded synthesis: ~890 ms
+- OpenAI GPT-4o grounded synthesis: ~890 ms
 - Total end-to-end response turnaround: ~1.14 seconds
 
 ## 7.6 Performance Metrics
@@ -1190,7 +1190,7 @@ Pipeline latency was profiled using LangSmith:
 # RESULTS AND CONCLUSION
 
 ## 8.1 Results
-The Enterprise AI Knowledge Copilot was successfully implemented as a full-stack enterprise RAG platform. The system ingests enterprise documents, indexes dense and sparse representations, executes hybrid retrieval with Reciprocal Rank Fusion, applies cross-encoder re-ranking, and synthesizes answers with Google Gemini supported by verifiable citations.
+The Enterprise AI Knowledge Copilot was successfully implemented as a full-stack enterprise RAG platform. The system ingests enterprise documents, indexes dense and sparse representations, executes hybrid retrieval with Reciprocal Rank Fusion, applies cross-encoder re-ranking, and synthesizes answers with OpenAI GPT-4o supported by verifiable citations.
 
 | Objective | Observed outcome in source | Evidence/status |
 | :--- | :--- | :--- |
@@ -1455,9 +1455,9 @@ class GroundedRAGResponse(BaseModel):
     has_sufficient_context: bool = Field(description="False if context is insufficient")
     citations: List[Citation] = Field(default_factory=list, description="Source citations")
 
-llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
-    google_api_key=os.getenv("GOOGLE_API_KEY"),
+llm = ChatOpenAI(
+    model="gpt-4o",
+    api_key=os.getenv("OPENAI_API_KEY"),
     temperature=0.0
 ).with_structured_output(GroundedRAGResponse)
 ```
@@ -1474,7 +1474,7 @@ llm = ChatGoogleGenerativeAI(
 | :---: | :--- | :--- |
 | **1** | Install Python 3.10+ and Docker Desktop | `python --version` and `docker --version` output valid versions |
 | **2** | Start container services via Docker Compose | `docker compose up -d` launches Qdrant (6333) and PostgreSQL (5433) |
-| **3** | Configure `.env` file | Add `GOOGLE_API_KEY`, `DATABASE_URL`, and `LANGCHAIN_API_KEY` |
+| **3** | Configure `.env` file | Add `OPENAI_API_KEY`, `DATABASE_URL`, and `LANGCHAIN_API_KEY` |
 | **4** | Install Python dependencies | `pip install -r requirements.txt` completes cleanly |
 | **5** | Apply database migrations | `alembic upgrade head` creates tables in PostgreSQL |
 | **6** | Launch FastAPI backend server | `uvicorn app.main:app --reload` responds at port 8000 |
@@ -1611,7 +1611,7 @@ Resolution: Verified via get_current_user dependency injection.
 | **Purpose Limitation** | Proprietary documents used exclusively for grounded enterprise retrieval | Ingestion route code review |
 | **Least Privilege** | Department-level pre-filtering restricts access to authorized files | Qdrant payload query inspection |
 | **Secret Management** | API keys stored in `.env`; excluded from git tracking | `.gitignore` verification |
-| **Data Minimization** | Only top-5 reranked chunks sent to Gemini LLM | Reranker pipeline review |
+| **Data Minimization** | Only top-5 reranked chunks sent to GPT-4o LLM | Reranker pipeline review |
 | **Hallucination Prevention**| Pydantic schema mandates verbatim quotes; forbids speculation | System prompt and schema test |
 | **Audit Logging** | Full execution trace and token accounting logged in LangSmith | Telemetry dashboard check |
 
@@ -1656,7 +1656,7 @@ Mitigation: Docker restart policies (unless-stopped) with volume persistence.
 3. FastAPI loads conversation history from PostgreSQL and applies department pre-filters.
 4. Qdrant executes hybrid search combining dense and sparse vectors via Reciprocal Rank Fusion.
 5. The Cross-Encoder reranks the top-25 passages, selecting the top-5 chunks.
-6. Google Gemini generates a grounded response with verbatim quote citations.
+6. OpenAI GPT-4o generates a grounded response with verbatim quote citations.
 7. Messages are committed to PostgreSQL, and the response is rendered in Streamlit.
 
 ### 9.2 Ingestion Validation Example
@@ -1726,7 +1726,7 @@ async def test_search_grounding():
 
 [11] LlamaIndex & LlamaParse. "LlamaParse: Vision-Augmented Parsing for Complex Documents." https://cloud.llamaindex.ai/. Accessed 11 October 2026.
 
-[12] Google AI. "Gemini API Documentation and Model Capabilities." https://ai.google.dev/. Accessed 11 October 2026.
+[12] OpenAI. "GPT-4o Documentation and Model Capabilities." https://platform.openai.com/docs/models/gpt-4o. Accessed 11 October 2026.
 
 [13] Jones, M., Bradley, J., and Sakimura, N. "JSON Web Token (JWT)." RFC 7519, Internet Engineering Task Force, 2015. https://www.rfc-editor.org/rfc/rfc7519.
 

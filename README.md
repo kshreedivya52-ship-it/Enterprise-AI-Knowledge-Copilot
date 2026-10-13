@@ -5,7 +5,7 @@ A high-performance, enterprise-ready **Retrieval-Augmented Generation (RAG)** pi
 - 📄 **Smart Parsing**: Document ingestion via **LlamaParse** with recursive text chunking.
 - 🔍 **Hybrid Retrieval**: Dense Semantic Search (BGE) + Sparse Keyword Search (SPLADE) via **Qdrant** with Reciprocal Rank Fusion (RRF).
 - 🎯 **2-Stage Precision**: Cross-Encoder **BGE Reranking** for top-5 candidate filtering.
-- 🧠 **Grounded LLM Generation**: **Google Gemini** with strict citation prompting, type-safe Pydantic output, and verbatim quote attribution.
+- 🧠 **Grounded LLM Generation**: **OpenAI GPT-4o** with strict citation prompting, type-safe Pydantic output, and verbatim quote attribution.
 - 📊 **End-to-End Observability**: Full execution tracing and latency monitoring via **LangSmith**.
 
 
@@ -51,4 +51,4 @@ Then:
 
 
 🏷️ Recommended GitHub Topics / Tags:
-rag • fastapi • qdrant • hybrid-search • splade • gemini • langsmith • reranking • enterprise-ai • python
+rag • fastapi • qdrant • hybrid-search • splade • gpt-4o • openai • langsmith • reranking • enterprise-ai • python

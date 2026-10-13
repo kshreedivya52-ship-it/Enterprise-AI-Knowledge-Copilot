@@ -11,6 +11,12 @@ class AuthRequest(BaseModel):
     password: str = Field(..., min_length=3, max_length=100)
 
 
+class RegisterRequest(BaseModel):
+    username: str = Field(..., min_length=2, max_length=50)
+    password: str = Field(..., min_length=3, max_length=100)
+    department: str = Field(default="general", max_length=50)
+
+
 class AuthResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -44,8 +50,9 @@ async def login_endpoint(payload: AuthRequest):
 
 
 @router.post("/register", response_model=AuthResponse)
-async def register_endpoint(payload: AuthRequest):
-    created = register_user(payload.username, payload.password)
+async def register_endpoint(payload: RegisterRequest):
+    dept = payload.department.strip().lower() if payload.department else "general"
+    created = register_user(payload.username, payload.password, department=dept)
     if not created:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -55,7 +62,7 @@ async def register_endpoint(payload: AuthRequest):
     token = create_access_token({
         "sub": payload.username.strip().lower(),
         "role": "editor",
-        "department": "general"
+        "department": dept
     })
 
     return {
@@ -63,5 +70,5 @@ async def register_endpoint(payload: AuthRequest):
         "token_type": "bearer",
         "username": payload.username.strip().lower(),
         "role": "editor",
-        "department": "general"
+        "department": dept
     }

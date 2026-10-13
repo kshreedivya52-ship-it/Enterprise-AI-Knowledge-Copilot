@@ -18,7 +18,7 @@ router = APIRouter(prefix="/search", tags=["search"])
 
 
 def format_history_for_prompt(messages) -> str:
-    """Formats raw database chat messages into a clean readable transcript for Gemini."""
+    """Formats raw database chat messages into a clean readable transcript for GPT-4o."""
     if not messages:
         return "No prior conversation history."
     formatted = []
@@ -39,7 +39,7 @@ async def search_endpoint(
     """
     Stateful RAG endpoint:
     1. Loads or creates a conversation session in PostgreSQL for the user.
-    2. Fetches past messages to inject context window into Gemini.
+    2. Fetches past messages to inject context window into GPT-4o.
     3. Performs hybrid retrieval + reranking.
     4. Generates grounded answer with citations.
     5. Saves user question & assistant response + citations to PostgreSQL.

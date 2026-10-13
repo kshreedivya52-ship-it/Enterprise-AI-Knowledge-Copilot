@@ -26,6 +26,7 @@ def chunk_document(
             "chunk_index": index,
             "text": chunk,
             "metadata": {
+                "chunk_index": index,
                 "source_file": os.path.basename(filename),
                 "char_count": len(chunk),
                 "word_count": len(chunk.split()),

@@ -13,5 +13,30 @@
     "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
     "role": "editor",
     "department": "general"
+  },
+  "adb123@gmail.com": {
+    "password_hash": "cd69d22b887f3c216343796e26c838fdc8947e7a0c62a3ee989195fe9c74aa37",
+    "role": "editor",
+    "department": "general"
+  },
+  "abd123@gmail.com": {
+    "password_hash": "cd69d22b887f3c216343796e26c838fdc8947e7a0c62a3ee989195fe9c74aa37",
+    "role": "editor",
+    "department": "general"
+  },
+  "testuser2026": {
+    "password_hash": "830b45a5aba5a25ef4e9d9ead449b04fbd39672eab5d092d8df48de90c61fffd",
+    "role": "editor",
+    "department": "general"
+  },
+  "testpilot": {
+    "password_hash": "c7ea7b4f313b04785b680cca6b41c3bbd29958a25b2b6603adae091992bb9509",
+    "role": "editor",
+    "department": "general"
+  },
+  "neetu": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "general"
   }
 }
