@@ -1,7 +1,7 @@
 import os
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 from pydantic import BaseModel, Field
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langsmith import traceable
 
@@ -11,7 +11,7 @@ from langsmith import traceable
 class CitationItem(BaseModel):
     source_id: int = Field(description="ID corresponding to [1], [2]")
     source_file: str
-    chunk_index: Optional[int] = None
+    chunk_index: Optional[Union[int, str]] = None
     quote: str = Field(description="Exact verbatim text snippet")
 
 class RAGAnswer(BaseModel):
@@ -61,24 +61,32 @@ def format_context_for_llm(documents: List[Dict[str, Any]]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# 3. Gemini 2.5 Flash Model Factory
+# 3. OpenAI GPT-4o Model Factory
 # ---------------------------------------------------------------------------
-def get_gemini_llm(model_name: Optional[str] = None):
+def get_openai_llm(model_name: Optional[str] = None):
     """
-    Initializes Google Gemini via langchain-google-genai with structured Pydantic output.
-    Reads GOOGLE_API_KEY or GEMINI_API_KEY from the environment.
+    Initializes OpenAI GPT-4o via langchain-openai with structured Pydantic output.
+    Reads OPENAI_API_KEY and OPENAI_MODEL from the environment.
     """
-    return ChatGoogleGenerativeAI(
-        model=model_name or os.getenv("GEMINI_MODEL", "gemini-3.6-flash"),
+    raw_key = os.getenv("OPENAI_API_KEY", "")
+    api_key = raw_key.strip("'\"") if raw_key else None
+    return ChatOpenAI(
+        model=model_name or os.getenv("OPENAI_MODEL", "gpt-4o"),
         temperature=0.0,
-        max_output_tokens=4096
+        max_tokens=4096,
+        api_key=api_key,
     ).with_structured_output(RAGAnswer)
+
+
+# Backward compatibility aliases
+get_llm = get_openai_llm
+get_gemini_llm = get_openai_llm
 
 
 # ---------------------------------------------------------------------------
 # 4. Main Traced Generation Function
 # ---------------------------------------------------------------------------
-@traceable(name="gemini-3.6-flash Citation Generation", run_type="chain")
+@traceable(name="gpt-4o Citation Generation", run_type="chain")
 async def generate_grounded_answer(
     query: str,
     documents: List[Dict[str, Any]],
@@ -86,36 +94,74 @@ async def generate_grounded_answer(
     model_name: Optional[str] = None
 ) -> RAGAnswer:
     """
-    Generates a citation-backed, grounded response using Google Gemini 3.6 Flash.
+    Generates a citation-backed, grounded response using OpenAI GPT-4o.
     
     Args:
         query: User search or question string.
         documents: List of reranked document chunks from stage 2.
         chat_history: Formatted string of past conversation messages.
-        model_name: Optional model override (defaults to gemini-3.6-flash).
+        model_name: Optional model override (defaults to gpt-4o).
         
     Returns:
         RAGAnswer: Structured Pydantic object containing the answer, inline citations,
                    and exact source quotes.
     """
-    # 1. Format reranked chunks into XML context
+    # 1. Early guard: If no documents found in knowledge base, return immediately without wasting LLM quota
+    if not documents:
+        return RAGAnswer(
+            answer="No relevant documents were found in the knowledge base to answer this question. Please make sure your file is uploaded and indexed by clicking the **'Index document'** button in the sidebar.",
+            citations=[],
+            has_sufficient_context=False
+        )
+
+    # 2. Format reranked chunks into XML context
     context_str = format_context_for_llm(documents)
     history_str = chat_history or "No prior conversation history."
     
-    # 2. Build structured chat prompt
+    # 3. Build structured chat prompt
     prompt_template = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_CITATION_PROMPT + "\n\n<conversation_history>\n{chat_history}\n</conversation_history>"),
         ("human", "Here is the retrieved context:\n{context}\n\nUser Question: {question}\n\nProvide a grounded answer with inline citations:")
     ])
     
-    # 3. Create chain with structured output
-    chain = prompt_template | get_gemini_llm(model_name)
-    
-    # 4. Invoke LLM asynchronously
-    result: RAGAnswer = await chain.ainvoke({
-        "context": context_str,
-        "chat_history": history_str,
-        "question": query
-    })
-    
-    return result
+    # 4. Invoke LLM with error handling for quota/rate limits and server spikes
+    try:
+        chain = prompt_template | get_openai_llm(model_name)
+        result: RAGAnswer = await chain.ainvoke({
+            "context": context_str,
+            "chat_history": history_str,
+            "question": query
+        })
+        return result
+    except Exception as e:
+        err_str = str(e)
+        if "insufficient_quota" in err_str or "rate_limit_exceeded" in err_str or "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+            answer_text = (
+                "⚠️ **OpenAI Quota Limit Reached (429 Rate Limit / Insufficient Quota)**: "
+                "The OpenAI API quota or rate limit for GPT-4o has been exceeded. "
+                "Please verify your `OPENAI_API_KEY` and account balance in `.env` or OpenAI dashboard."
+            )
+        elif "503" in err_str or "UNAVAILABLE" in err_str or "service_unavailable" in err_str:
+            answer_text = (
+                "⚠️ **OpenAI Service Temporarily Busy (503 Service Unavailable)**: "
+                "OpenAI servers are currently experiencing high traffic. Please try your question again in a moment."
+            )
+        else:
+            answer_text = f"⚠️ Could not generate grounded answer from AI model: {err_str}"
+
+        # If we have retrieved document chunks, include a snippet so the user gets value
+        citations = []
+        for i, doc in enumerate(documents[:3], 1):
+            meta = doc.get("metadata", {})
+            citations.append(CitationItem(
+                source_id=i,
+                source_file=meta.get("source_file", "Uploaded Document"),
+                chunk_index=meta.get("chunk_index"),
+                quote=doc.get("text", "")[:180] + "..."
+            ))
+
+        return RAGAnswer(
+            answer=answer_text,
+            citations=citations,
+            has_sufficient_context=False
+        )

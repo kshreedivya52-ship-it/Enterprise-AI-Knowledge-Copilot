@@ -11,6 +11,11 @@ DATABASE_URL = os.getenv(
     "DATABASE_URL", 
     "postgresql+asyncpg://user:password@localhost:5433/copilot_db"
 )
+# Normalize connection string for SQLAlchemy asyncpg
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+elif DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
 
 # 1. Engine: Manages connection pool to PostgreSQL using asyncpg driver
 engine = create_async_engine(

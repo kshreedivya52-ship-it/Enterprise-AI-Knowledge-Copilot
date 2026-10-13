@@ -67,14 +67,17 @@ async def get_conversation_messages(
     """
     Retrieves recent chat history for a conversation thread in chronological order.
     """
+    # Query the most recent messages descending, then reverse so they are chronological
     stmt = (
         select(ChatMessage)
         .where(ChatMessage.conversation_id == conversation_id)
-        .order_by(ChatMessage.created_at.asc())
+        .order_by(ChatMessage.created_at.desc())
         .limit(limit)
     )
     result = await db.execute(stmt)
-    return list(result.scalars().all())
+    messages = list(result.scalars().all())
+    messages.reverse()
+    return messages
 
 # 4. List all chat threads belonging to a user
 async def list_user_conversations(

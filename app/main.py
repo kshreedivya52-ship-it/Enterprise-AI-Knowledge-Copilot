@@ -54,11 +54,22 @@ async def lifespan(app: FastAPI):
     app_state.clear()
     logger.info("Application resources cleaned up successfully.")
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # Initialize FastAPI app with lifespan context manager
 app = FastAPI(
     title="Enterprise AI Knowledge Copilot",
     version="1.0.0",
     lifespan=lifespan
+)
+
+# Configure CORS for local development and web clients
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Register routers
