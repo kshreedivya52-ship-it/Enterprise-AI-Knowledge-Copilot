@@ -33,6 +33,12 @@ STRICT RULES:
 5. Missing Information: If the provided <context> does not contain enough relevant information to fully answer the question, state:
    "The provided enterprise documents do not contain sufficient information to answer this question."
    and set `has_sufficient_context` to false.
+6. Role-Based Access Control (RBAC) & Permission Restrictions:
+   The authenticated user is logged in under department: '{user_department}' (Role: '{user_role}').
+   If the user's question is inquiring about documents, records, or topics belonging to a restricted department they do NOT have permission to access (for example, an HR employee asking for financial reports/budgets, or an engineering employee asking for legal contracts):
+   You MUST state:
+   "🔒 **Access Restricted**: You cannot access restricted department documents under your current role (`{user_department}`). Access to company files and records is strictly restricted to authorized department personnel."
+   Do NOT output "The provided enterprise documents do not contain sufficient information to answer this question" when the query is asking for restricted department records. Set `has_sufficient_context` to false and `citations` to an empty list.
 """
 
 
@@ -91,6 +97,8 @@ async def generate_grounded_answer(
     query: str,
     documents: List[Dict[str, Any]],
     chat_history: Optional[str] = None,
+    user_department: Optional[str] = "general",
+    user_role: Optional[str] = "editor",
     model_name: Optional[str] = None
 ) -> RAGAnswer:
     """
@@ -100,6 +108,8 @@ async def generate_grounded_answer(
         query: User search or question string.
         documents: List of reranked document chunks from stage 2.
         chat_history: Formatted string of past conversation messages.
+        user_department: Authenticated user's department.
+        user_role: Authenticated user's role.
         model_name: Optional model override (defaults to gpt-4o).
         
     Returns:
@@ -118,9 +128,15 @@ async def generate_grounded_answer(
     context_str = format_context_for_llm(documents)
     history_str = chat_history or "No prior conversation history."
     
-    # 3. Build structured chat prompt
+    # 3. Format system prompt with user's active RBAC department and role
+    system_prompt = SYSTEM_CITATION_PROMPT.format(
+        user_department=user_department or "general",
+        user_role=user_role or "editor"
+    )
+
+    # 4. Build structured chat prompt
     prompt_template = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_CITATION_PROMPT + "\n\n<conversation_history>\n{chat_history}\n</conversation_history>"),
+        ("system", system_prompt + "\n\n<conversation_history>\n{chat_history}\n</conversation_history>"),
         ("human", "Here is the retrieved context:\n{context}\n\nUser Question: {question}\n\nProvide a grounded answer with inline citations:")
     ])
     

@@ -25,6 +25,8 @@ qdrant_data/
 *.swp
 *.swo
 
+#users data
+users.json
 
 
 

@@ -1,0 +1,57 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2097 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Technologies - Cloud Infrastructure Regulatory Compliance Manual) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Technologies - Cloud Infrastructure Regulatory Compliance Manual) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: SOC 1 AND SOC 2 TYPE II ATTESTATION) Tj ET
+BT /F2 9.5 Tf 50 664 Td (Nexus completes annual independent SOC 1 and SOC 2 Type II examinations conducted) Tj ET
+BT /F2 9.5 Tf 50 651 Td (by a licensed CPA firm. Attestation reports evaluate system controls against AICPA) Tj ET
+BT /F2 9.5 Tf 50 638 Td (Trust Services Criteria: Security, Availability, Processing Integrity,) Tj ET
+BT /F2 9.5 Tf 50 625 Td (Confidentiality, and Privacy over a minimum 6-month testing window.) Tj ET
+BT /F1 11 Tf 50 596 Td (SECTION 2: ISO/IEC 27001:2022 CERTIFICATION) Tj ET
+BT /F2 9.5 Tf 50 575 Td (The Information Security Management System \(ISMS\) governing Nexus infrastructure) Tj ET
+BT /F2 9.5 Tf 50 562 Td (is certified under ISO/IEC 27001:2022. Security controls encompass cryptography,) Tj ET
+BT /F2 9.5 Tf 50 549 Td (access management, vulnerability patching, physical perimeter controls, and) Tj ET
+BT /F2 9.5 Tf 50 536 Td (incident management.) Tj ET
+BT /F1 11 Tf 50 507 Td (SECTION 3: HIPAA COMPLIANCE FOR HEALTHCARE DATA) Tj ET
+BT /F2 9.5 Tf 50 486 Td (When processing Protected Health Information \(PHI\) on behalf of covered entities,) Tj ET
+BT /F2 9.5 Tf 50 473 Td (Nexus executes formal Business Associate Agreements \(BAAs\). PHI is protected) Tj ET
+BT /F2 9.5 Tf 50 460 Td (through dedicated VPC isolation, AES-256 encryption at rest, TLS 1.3 in transit,) Tj ET
+BT /F2 9.5 Tf 50 447 Td (and immutable audit logging.) Tj ET
+BT /F1 11 Tf 50 418 Td (SECTION 4: PCI-DSS PAYMENT SECURITY) Tj ET
+BT /F2 9.5 Tf 50 397 Td (Nexus utilizes PCI-DSS Level 1 certified payment processors \(Stripe\) for credit) Tj ET
+BT /F2 9.5 Tf 50 384 Td (card transactions, ensuring zero cardholder data touches or resides on Nexus) Tj ET
+BT /F2 9.5 Tf 50 371 Td (application servers.) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002400 00000 n 
+0000002475 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2545
+%%EOF

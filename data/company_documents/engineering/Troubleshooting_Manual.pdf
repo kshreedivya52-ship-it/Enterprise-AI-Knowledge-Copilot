@@ -1,0 +1,65 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2662 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Platform - Incident Response & Troubleshooting Manual) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Platform - Incident Response & Troubleshooting Manual) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: INCIDENT SEVERITY CLASSIFICATION) Tj ET
+BT /F2 9.5 Tf 50 664 Td (- SEV-1 \(Critical Outage\): Core service down, data corruption risk, or outage) Tj ET
+BT /F2 9.5 Tf 50 651 Td (affecting >5% of active users. Target response time: <10 minutes.) Tj ET
+BT /F2 9.5 Tf 50 632 Td (- SEV-2 \(Major Degradation\): Degraded search performance, ingestion delays >15) Tj ET
+BT /F2 9.5 Tf 50 619 Td (minutes, or isolated regional latency. Target response time: <30 minutes.) Tj ET
+BT /F2 9.5 Tf 50 600 Td (- SEV-3 \(Minor Defect\): Non-critical bugs with available workarounds. Target) Tj ET
+BT /F2 9.5 Tf 50 587 Td (response time: <4 hours.) Tj ET
+BT /F1 11 Tf 50 558 Td (SECTION 2: HIGH DATABASE CONNECTION SATURATION RUNBOOK) Tj ET
+BT /F2 9.5 Tf 50 537 Td (Symptoms: API endpoints return HTTP 500 or) Tj ET
+BT /F2 9.5 Tf 50 524 Td (`asyncpg.exceptions.TooManyConnectionsError`.) Tj ET
+BT /F2 9.5 Tf 50 505 Td (Diagnostic Steps:) Tj ET
+BT /F2 9.5 Tf 50 486 Td (1. Check active pgBouncer connection count: `SHOW POOLS;`) Tj ET
+BT /F2 9.5 Tf 50 467 Td (2. Inspect long-running blocking queries in PostgreSQL:) Tj ET
+BT /F2 9.5 Tf 50 448 Td (`SELECT pid, now\(\) - query_start AS duration, query FROM pg_stat_activity WHERE) Tj ET
+BT /F2 9.5 Tf 50 435 Td (state != 'idle' ORDER BY duration DESC;`) Tj ET
+BT /F2 9.5 Tf 50 416 Td (3. Terminate stuck rogue query: `SELECT pg_terminate_backend\(pid\);`) Tj ET
+BT /F2 9.5 Tf 50 397 Td (4. If saturation persists, scale pgBouncer max client connections from 100 to 250) Tj ET
+BT /F2 9.5 Tf 50 384 Td (in Helm values.) Tj ET
+BT /F1 11 Tf 50 355 Td (SECTION 3: QDRANT VECTOR SEARCH LATENCY SPIKE RUNBOOK) Tj ET
+BT /F2 9.5 Tf 50 334 Td (Symptoms: Hybrid search endpoint latency exceeds 1.5 seconds.) Tj ET
+BT /F2 9.5 Tf 50 315 Td (Diagnostic Steps:) Tj ET
+BT /F2 9.5 Tf 50 296 Td (1. Inspect Qdrant CPU and memory consumption via Grafana dashboard.) Tj ET
+BT /F2 9.5 Tf 50 277 Td (2. Verify if HNSW background indexing is saturating CPU threads.) Tj ET
+BT /F2 9.5 Tf 50 258 Td (3. Check memory swap utilization. If memory exceeds 85%, adjust) Tj ET
+BT /F2 9.5 Tf 50 245 Td (`hnsw_config.ef_construct` or scale cluster node size.) Tj ET
+BT /F2 9.5 Tf 50 226 Td (4. Execute collection optimization trigger: `POST) Tj ET
+BT /F2 9.5 Tf 50 213 Td (/collections/hybrid_knowledge_base/update_params` to compact segments.) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002965 00000 n 
+0000003040 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3110
+%%EOF
