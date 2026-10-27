@@ -4,6 +4,31 @@
     "role": "admin",
     "department": "general"
   },
+  "hr_user": {
+    "password_hash": "fc2e8ef38e7d570ac654d2c0bebb77f2d56a6d4a50bd0ef8f05aecf574759d17",
+    "role": "editor",
+    "department": "hr"
+  },
+  "finance_user": {
+    "password_hash": "3b23c30af2e58fb772e8db1ff12ebea754b3c6c41d61ea76b287fe5ee35cc709",
+    "role": "editor",
+    "department": "finance"
+  },
+  "eng_user": {
+    "password_hash": "6634a64a285f1c92a8efca8f5138b6707192e967bb72ab93627a5596d4526b05",
+    "role": "editor",
+    "department": "engineering"
+  },
+  "legal_user": {
+    "password_hash": "19c0b394cf530943bc76bce09b28fa9952e31a5c97ef84e4b852c0e9546de8ba",
+    "role": "editor",
+    "department": "legal"
+  },
+  "general_user": {
+    "password_hash": "8335341720cea02f44e3f736611ca3a2967565efe52db75f10e70fa60a405cfb",
+    "role": "editor",
+    "department": "general"
+  },
   "user": {
     "password_hash": "d7b43b4ddcdd34c5f3482225cfe8ed1f0dcfaa8a80d99853011229f47228c1c0",
     "role": "editor",
@@ -38,5 +63,30 @@
     "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
     "role": "editor",
     "department": "general"
+  },
+  "sinu": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "engineering"
+  },
+  "juhi": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "hr"
+  },
+  "abc123": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "finance"
+  },
+  "abcd123": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "hr"
+  },
+  "josh": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "legal"
   }
 }

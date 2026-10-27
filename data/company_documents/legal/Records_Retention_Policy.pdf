@@ -1,0 +1,60 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2307 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Technologies - Corporate Records Retention and Destruction Policy) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Technologies - Corporate Records Retention and Destruction Policy) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: PURPOSE AND CLASSIFICATION SCHEDULE) Tj ET
+BT /F2 9.5 Tf 50 664 Td (This policy establishes mandatory retention schedules for corporate records in) Tj ET
+BT /F2 9.5 Tf 50 651 Td (accordance with statutory, regulatory, and operational requirements. Records are) Tj ET
+BT /F2 9.5 Tf 50 638 Td (classified into the following retention periods:) Tj ET
+BT /F2 9.5 Tf 50 619 Td (- Financial & Tax Documents: 7 years from tax filing date \(audits, ledgers, tax) Tj ET
+BT /F2 9.5 Tf 50 606 Td (returns\).) Tj ET
+BT /F2 9.5 Tf 50 587 Td (- Executed Contracts & Agreements: 10 years following expiration or formal) Tj ET
+BT /F2 9.5 Tf 50 574 Td (termination.) Tj ET
+BT /F2 9.5 Tf 50 555 Td (- Employee & Personnel Records: 7 years following date of employee separation.) Tj ET
+BT /F2 9.5 Tf 50 536 Td (- Technical Logs & Audit Trails: 1 year in active queryable storage; 3 years in) Tj ET
+BT /F2 9.5 Tf 50 523 Td (cold archival.) Tj ET
+BT /F2 9.5 Tf 50 504 Td (- Corporate Governance & Board Minutes: Permanent retention in corporate legal) Tj ET
+BT /F2 9.5 Tf 50 491 Td (archives.) Tj ET
+BT /F1 11 Tf 50 462 Td (SECTION 2: LITIGATION HOLD PROCEDURES) Tj ET
+BT /F2 9.5 Tf 50 441 Td (Upon reasonable anticipation of litigation, regulatory subpoena, or government) Tj ET
+BT /F2 9.5 Tf 50 428 Td (investigation, the General Counsel issues an immediate 'Litigation Hold' notice.) Tj ET
+BT /F2 9.5 Tf 50 415 Td (All routine disposal and automated data deletion routines for relevant documents) Tj ET
+BT /F2 9.5 Tf 50 402 Td (are immediately suspended until the hold is formally rescinded in writing.) Tj ET
+BT /F1 11 Tf 50 373 Td (SECTION 3: SECURE DESTRUCTION STANDARDS) Tj ET
+BT /F2 9.5 Tf 50 352 Td (When records reach the end of their retention lifecycle, electronic media must be) Tj ET
+BT /F2 9.5 Tf 50 339 Td (sanitized in compliance with NIST SP 800-88 Guidelines for Media Sanitization) Tj ET
+BT /F2 9.5 Tf 50 326 Td (\(cryptographic erasure or physical destruction\).) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002610 00000 n 
+0000002685 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2755
+%%EOF

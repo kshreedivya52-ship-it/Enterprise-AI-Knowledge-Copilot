@@ -1,0 +1,58 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2234 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Technologies - Master Vendor and Supplier Services Agreement) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Technologies - Master Vendor and Supplier Services Agreement) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: ENGAGEMENT AND DELIVERABLES ACCEPTANCE) Tj ET
+BT /F2 9.5 Tf 50 664 Td (Vendor agrees to provide services and deliverables described in applicable) Tj ET
+BT /F2 9.5 Tf 50 651 Td (Statements of Work \(SOW\). Nexus shall have ten \(10\) business days from delivery to) Tj ET
+BT /F2 9.5 Tf 50 638 Td (evaluate and test deliverables. If deliverables fail to meet agreed) Tj ET
+BT /F2 9.5 Tf 50 625 Td (specifications, Nexus may reject them and Vendor must remediate within five \(5\)) Tj ET
+BT /F2 9.5 Tf 50 612 Td (business days at no additional cost.) Tj ET
+BT /F1 11 Tf 50 583 Td (SECTION 2: SUPPLIER SECURITY & COMPLIANCE MANDATE) Tj ET
+BT /F2 9.5 Tf 50 562 Td (Vendor warrants that it maintains rigorous information security controls) Tj ET
+BT /F2 9.5 Tf 50 549 Td (conforming to SOC 2 Type II or ISO/IEC 27001 standards. If Vendor processes Nexus) Tj ET
+BT /F2 9.5 Tf 50 536 Td (data, it must encrypt data in transit \(TLS 1.3\) and at rest \(AES-256\) and) Tj ET
+BT /F2 9.5 Tf 50 523 Td (immediately notify Nexus within 24 hours of any suspected security incident.) Tj ET
+BT /F1 11 Tf 50 494 Td (SECTION 3: PAYMENT TERMS AND INVOICING) Tj ET
+BT /F2 9.5 Tf 50 473 Td (Vendor invoices must reference an active Nexus Purchase Order \(PO\). Invoices are) Tj ET
+BT /F2 9.5 Tf 50 460 Td (payable under Net-45 terms following formal acceptance of deliverables. Invoices) Tj ET
+BT /F2 9.5 Tf 50 447 Td (without valid PO numbers will be rejected.) Tj ET
+BT /F1 11 Tf 50 418 Td (SECTION 4: INSURANCE REQUIREMENTS) Tj ET
+BT /F2 9.5 Tf 50 397 Td (Vendor must maintain Commercial General Liability insurance of at least $2,000,000) Tj ET
+BT /F2 9.5 Tf 50 384 Td (per occurrence, Workers' Compensation in compliance with statutory minimums, and) Tj ET
+BT /F2 9.5 Tf 50 371 Td (Cyber Liability insurance of at least $5,000,000 per occurrence naming Nexus as an) Tj ET
+BT /F2 9.5 Tf 50 358 Td (additional insured.) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002537 00000 n 
+0000002612 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2682
+%%EOF

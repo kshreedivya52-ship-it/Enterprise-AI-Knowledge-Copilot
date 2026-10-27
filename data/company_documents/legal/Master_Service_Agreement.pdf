@@ -1,0 +1,64 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2896 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Technologies Inc. - Standard Enterprise Master Service Agreement) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Technologies Inc. - Standard Enterprise Master Service Agreement \(MSA\)) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: PROVISION OF SERVICES AND SLA COMMITMENTS) Tj ET
+BT /F2 9.5 Tf 50 664 Td (Nexus Enterprise Technologies Inc. \('Provider'\) grants Customer a non-exclusive,) Tj ET
+BT /F2 9.5 Tf 50 651 Td (non-transferable subscription right to access and use the Nexus Cloud Platform.) Tj ET
+BT /F2 9.5 Tf 50 638 Td (Provider commits to delivering a Service Level Agreement \(SLA\) uptime of) Tj ET
+BT /F2 9.5 Tf 50 625 Td (ninety-nine and nine-tenths percent \(99.9%\) measured on a monthly calendar basis,) Tj ET
+BT /F2 9.5 Tf 50 612 Td (excluding scheduled maintenance windows. In the event uptime falls below 99.9%,) Tj ET
+BT /F2 9.5 Tf 50 599 Td (Customer is entitled to proportionate service fee credits.) Tj ET
+BT /F1 11 Tf 50 570 Td (SECTION 2: INTELLECTUAL PROPERTY RIGHTS & CUSTOMER DATA) Tj ET
+BT /F2 9.5 Tf 50 549 Td (Customer retains all right, title, and ownership interest in Customer Data) Tj ET
+BT /F2 9.5 Tf 50 536 Td (uploaded to the Platform. Provider retains all intellectual property rights in the) Tj ET
+BT /F2 9.5 Tf 50 523 Td (Platform, including software code, API endpoints, machine learning models, and) Tj ET
+BT /F2 9.5 Tf 50 510 Td (documentation. Provider shall not use Customer Data to train foundation models) Tj ET
+BT /F2 9.5 Tf 50 497 Td (without express written authorization.) Tj ET
+BT /F1 11 Tf 50 468 Td (SECTION 3: MUTUAL INDEMNIFICATION) Tj ET
+BT /F2 9.5 Tf 50 447 Td (Provider agrees to defend, indemnify, and hold harmless Customer against any) Tj ET
+BT /F2 9.5 Tf 50 434 Td (third-party claims alleging that Customer's authorized use of the Platform) Tj ET
+BT /F2 9.5 Tf 50 421 Td (infringes any valid patent, copyright, or trademark. Customer agrees to indemnify) Tj ET
+BT /F2 9.5 Tf 50 408 Td (Provider against claims arising from unauthorized data uploaded in breach of) Tj ET
+BT /F2 9.5 Tf 50 395 Td (applicable laws.) Tj ET
+BT /F1 11 Tf 50 366 Td (SECTION 4: LIMITATION OF LIABILITY AND GOVERNING LAW) Tj ET
+BT /F2 9.5 Tf 50 345 Td (Neither party shall be liable for indirect, incidental, punitive, or consequential) Tj ET
+BT /F2 9.5 Tf 50 332 Td (damages. Each party's maximum aggregate liability arising under this Agreement) Tj ET
+BT /F2 9.5 Tf 50 319 Td (shall be capped at the total subscription fees paid by Customer in the twelve \(12\)) Tj ET
+BT /F2 9.5 Tf 50 306 Td (months preceding the incident. This Agreement is governed by the laws of the State) Tj ET
+BT /F2 9.5 Tf 50 293 Td (of Delaware, with dispute resolution via binding AAA arbitration in Wilmington,) Tj ET
+BT /F2 9.5 Tf 50 280 Td (Delaware.) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000003199 00000 n 
+0000003274 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3344
+%%EOF

@@ -1,0 +1,68 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 3139 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Platform - High-Level System Architecture Specification) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Platform - High-Level System Architecture Specification) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: ARCHITECTURE OVERVIEW & INGRESS TIER) Tj ET
+BT /F2 9.5 Tf 50 664 Td (The Nexus Cloud Platform is built on a distributed microservices architecture) Tj ET
+BT /F2 9.5 Tf 50 651 Td (hosted across multiple Amazon Web Services \(AWS\) Availability Zones in us-west-2) Tj ET
+BT /F2 9.5 Tf 50 638 Td (\(Oregon\) with an active-standby disaster recovery presence in us-east-1. Ingress) Tj ET
+BT /F2 9.5 Tf 50 625 Td (traffic is fronted by Cloudflare Enterprise for DDoS mitigation and SSL) Tj ET
+BT /F2 9.5 Tf 50 612 Td (termination, flowing through an Envoy API Gateway cluster with mTLS service mesh) Tj ET
+BT /F2 9.5 Tf 50 599 Td (routing.) Tj ET
+BT /F1 11 Tf 50 570 Td (SECTION 2: EVENT-DRIVEN MESSAGE BUS & SERVICES TIER) Tj ET
+BT /F2 9.5 Tf 50 549 Td (Core services communicate asynchronously via an Apache Kafka 3.6 event bus) Tj ET
+BT /F2 9.5 Tf 50 536 Td (deployed with 3 brokers and a replication factor of 3. Core microservices include:) Tj ET
+BT /F2 9.5 Tf 50 517 Td (- Authentication & RBAC Service \(FastAPI / Auth0 / Local JWT RS256/HS256\)) Tj ET
+BT /F2 9.5 Tf 50 498 Td (- Ingestion Pipeline Engine \(LlamaParse, async chunking, metadata enrichment\)) Tj ET
+BT /F2 9.5 Tf 50 479 Td (- Vector Search & Reranking Service \(Qdrant hybrid dense-sparse,) Tj ET
+BT /F2 9.5 Tf 50 466 Td (BGE-Reranker-Large\)) Tj ET
+BT /F2 9.5 Tf 50 447 Td (- LLM Grounding & Citation Synthesizer \(LangChain, OpenAI GPT-4o, Google Gemini) Tj ET
+BT /F2 9.5 Tf 50 434 Td (Flash\)) Tj ET
+BT /F2 9.5 Tf 50 415 Td (- Chat History Persistence Service \(PostgreSQL 16 with async SQLAlchemy\)) Tj ET
+BT /F1 11 Tf 50 386 Td (SECTION 3: CACHING & PERSISTENCE TIERS) Tj ET
+BT /F2 9.5 Tf 50 365 Td (- Primary Relational Database: PostgreSQL 16 hosted on AWS Aurora with Citus) Tj ET
+BT /F2 9.5 Tf 50 352 Td (multi-node distributed tables and monthly partitioning on chat history.) Tj ET
+BT /F2 9.5 Tf 50 333 Td (- Caching Layer: Redis Cluster 7.2 configured with write-through caching, 4-hour) Tj ET
+BT /F2 9.5 Tf 50 320 Td (TTL for session state, and LRU eviction policy.) Tj ET
+BT /F2 9.5 Tf 50 301 Td (- Vector Engine: Qdrant cluster storing 384-dimensional dense vectors) Tj ET
+BT /F2 9.5 Tf 50 288 Td (\(BAAI/bge-small-en-v1.5\) and SPLADE sparse lexical vectors, enabling Reciprocal) Tj ET
+BT /F2 9.5 Tf 50 275 Td (Rank Fusion \(RRF\) search.) Tj ET
+BT /F1 11 Tf 50 246 Td (SECTION 4: OBSERVABILITY & DISASTER RECOVERY) Tj ET
+BT /F2 9.5 Tf 50 225 Td (Observability is maintained through OpenTelemetry instrumentation streaming to) Tj ET
+BT /F2 9.5 Tf 50 212 Td (Datadog and Prometheus/Grafana. P99 API response latency is maintained below) Tj ET
+BT /F2 9.5 Tf 50 199 Td (320ms. The platform satisfies a Recovery Point Objective \(RPO\) of <1 minute and a) Tj ET
+BT /F2 9.5 Tf 50 186 Td (Recovery Time Objective \(RTO\) of <15 minutes.) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000003442 00000 n 
+0000003517 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3587
+%%EOF

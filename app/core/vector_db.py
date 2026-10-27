@@ -136,17 +136,34 @@ def query_hybrid_search(
     query_dense = list(dense_model.embed([query_text]))[0].tolist()
     query_sparse = list(sparse_model.embed([query_text]))[0]
 
-    # Build Qdrant filter from user's department (None = no filter for admins)
+    # Build Qdrant filter from user's department (None or 'admin' = no filter)
     qdrant_filter = None
-    if department:
-        qdrant_filter = models.Filter(
-            must=[
-                models.FieldCondition(
-                    key="department",
-                    match=models.MatchValue(value=department),
-                )
-            ]
-        )
+    if department and department.lower().strip() != "admin":
+        dept = department.lower().strip()
+        if dept == "general":
+            qdrant_filter = models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="department",
+                        match=models.MatchValue(value="general"),
+                    )
+                ]
+            )
+        else:
+            # Department-specific users (e.g. hr, finance, engineering, legal) can access
+            # both their own department documents and general company-wide guidelines
+            qdrant_filter = models.Filter(
+                should=[
+                    models.FieldCondition(
+                        key="department",
+                        match=models.MatchValue(value=dept),
+                    ),
+                    models.FieldCondition(
+                        key="department",
+                        match=models.MatchValue(value="general"),
+                    ),
+                ]
+            )
 
     # Execute fused search with RBAC filter applied at prefetch level
     try:

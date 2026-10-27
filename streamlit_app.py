@@ -342,6 +342,13 @@ if not st.session_state.logged_in:
             st.session_state.username = qp_user.strip().lower()
             st.session_state.auth_token = qp_token
             st.session_state.current_session_id = qp_session_id if qp_session_id else None
+            try:
+                payload = jwt.decode(qp_token, LOCAL_JWT_SECRET, algorithms=["HS256"])
+                st.session_state.department = payload.get("department", "general")
+                st.session_state.role = payload.get("role", "editor")
+            except Exception:
+                st.session_state.department = "general"
+                st.session_state.role = "editor"
 
 
 def get_headers() -> Dict[str, str]:
@@ -373,6 +380,8 @@ def login_action(username_input: str, password_input: str) -> bool:
             st.session_state.logged_in = True
             st.session_state.username = data.get("username", username_input)
             st.session_state.auth_token = data.get("access_token")
+            st.session_state.department = data.get("department", "general")
+            st.session_state.role = data.get("role", "editor")
             st.session_state.current_session_id = None
             st.session_state.messages = []
             
@@ -395,6 +404,8 @@ def login_action(username_input: str, password_input: str) -> bool:
             st.session_state.logged_in = True
             st.session_state.username = user_info["username"]
             st.session_state.auth_token = token
+            st.session_state.department = user_info.get("department", "general")
+            st.session_state.role = user_info.get("role", "editor")
             st.session_state.current_session_id = None
             st.session_state.messages = []
             
@@ -562,7 +573,19 @@ if not st.session_state.logged_in:
                         fetch_user_conversations()
                         st.rerun()
 
-            st.caption("Demo accounts available: `admin` / `admin123` or `user` / `user123`")
+            st.markdown("""
+            <div style="font-size: 0.78rem; color: #9CA3AF; margin-top: 14px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
+                <div style="font-weight: 600; color: #10a37f; margin-bottom: 6px;">🔐 Demo Accounts for RBAC Testing:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                    <div>• <b>Admin</b>: <code>admin</code> / <code>admin123</code></div>
+                    <div>• <b>General</b>: <code>general_user</code> / <code>general123</code></div>
+                    <div>• <b>HR</b>: <code>hr_user</code> / <code>hr123</code></div>
+                    <div>• <b>Engineering</b>: <code>eng_user</code> / <code>eng123</code></div>
+                    <div>• <b>Finance</b>: <code>finance_user</code> / <code>finance123</code></div>
+                    <div>• <b>Legal</b>: <code>legal_user</code> / <code>legal123</code></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
     st.stop()
 
@@ -641,19 +664,25 @@ with st.sidebar:
     # Optional Document Attachment in Sidebar
     st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
     with st.expander("📎 Add document to knowledge", expanded=False):
-        uploaded_doc = st.file_uploader("Upload file", type=["pdf", "txt", "md", "docx"], label_visibility="collapsed")
+        uploaded_doc = st.file_uploader("Upload file", type=["pdf", "txt", "md", "docx", "xlsx"], label_visibility="collapsed")
+        user_dept = st.session_state.get("department", "general")
+        dept_options = ["general", "engineering", "finance", "hr", "legal"]
+        default_idx = dept_options.index(user_dept) if user_dept in dept_options else 0
+        target_dept = st.selectbox("Assign Document Access (Role):", dept_options, index=default_idx, key="upload_dept_select")
         if uploaded_doc and st.button("Index document", use_container_width=True):
             with st.spinner("Indexing..."):
                 try:
                     files = {"file": (uploaded_doc.name, uploaded_doc.getvalue(), uploaded_doc.type)}
+                    data = {"department": target_dept}
                     resp = httpx.post(
                         f"{st.session_state.backend_url}/ingest/upload",
                         headers=get_headers(),
                         files=files,
+                        data=data,
                         timeout=90.0
                     )
                     if resp.status_code == 200:
-                        st.success("Indexed successfully!")
+                        st.success(f"Indexed under '{target_dept}' access successfully!")
                     else:
                         st.error(f"Error {resp.status_code}")
                 except Exception as e:
@@ -662,11 +691,15 @@ with st.sidebar:
     # Bottom User Profile & Logout
     st.markdown("<div style='flex-grow: 1; height: 10vh;'></div>", unsafe_allow_html=True)
     user_initial = (st.session_state.username[0].upper()) if st.session_state.username else "U"
+    active_dept = st.session_state.get("department", "general").upper()
     
     st.markdown(f"""
     <div class="user-profile-bar">
         <div class="user-avatar">{user_initial}</div>
-        <div class="user-name">{st.session_state.username}</div>
+        <div style="flex-grow: 1; overflow: hidden;">
+            <div class="user-name">{st.session_state.username}</div>
+            <div style="font-size: 0.72rem; color: #10a37f; font-weight: 600; letter-spacing: 0.04em;">{active_dept} ACCESS</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -710,6 +743,7 @@ st.markdown(f"""
     <div class="nav-user-badge">
         <span class="nav-user-dot"></span>
         <span>{st.session_state.username}</span>
+        <span style="background: rgba(16, 163, 127, 0.18); color: #10a37f; border: 1px solid rgba(16, 163, 127, 0.35); padding: 1px 7px; border-radius: 6px; font-weight: 600; font-size: 0.72rem;">{active_dept}</span>
     </div>
 </div>
 """, unsafe_allow_html=True)

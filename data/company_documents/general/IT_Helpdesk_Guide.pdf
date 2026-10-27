@@ -1,0 +1,63 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2532 >>
+stream
+BT /F1 14 Tf 50 740 Td (Nexus Technologies - Employee IT Helpdesk & Self-Service Manual) Tj ET
+BT /F2 9.5 Tf 50 714 Td (# Nexus Technologies - Employee IT Helpdesk & Self-Service Manual) Tj ET
+BT /F1 11 Tf 50 685 Td (SECTION 1: HOW TO CONTACT THE IT HELPDESK) Tj ET
+BT /F2 9.5 Tf 50 664 Td (The Nexus IT Helpdesk provides technical support Monday through Friday, 24 hours a) Tj ET
+BT /F2 9.5 Tf 50 651 Td (day:) Tj ET
+BT /F2 9.5 Tf 50 632 Td (- Slack Channel: Submit requests in `#help-it` for real-time triage.) Tj ET
+BT /F2 9.5 Tf 50 613 Td (- IT Service Portal: Log tickets at `https://helpdesk.nexustech.internal`.) Tj ET
+BT /F2 9.5 Tf 50 594 Td (- Critical Emergency Hotline: Call 1-888-555-NXIT for urgent outages.) Tj ET
+BT /F1 11 Tf 50 565 Td (SECTION 2: OKTA SINGLE SIGN-ON & PASSWORD MANAGEMENT) Tj ET
+BT /F2 9.5 Tf 50 544 Td (- Passwords must be at least 14 characters, containing uppercase, lowercase,) Tj ET
+BT /F2 9.5 Tf 50 531 Td (numbers, and symbols.) Tj ET
+BT /F2 9.5 Tf 50 512 Td (- Passwords expire every 180 days. Self-service password resets are available at) Tj ET
+BT /F2 9.5 Tf 50 499 Td (`https://auth.nexustech.internal/reset`.) Tj ET
+BT /F2 9.5 Tf 50 480 Td (- Multi-Factor Authentication \(MFA\) is strictly enforced via YubiKey hardware keys) Tj ET
+BT /F2 9.5 Tf 50 467 Td (or the Okta Verify mobile application.) Tj ET
+BT /F1 11 Tf 50 438 Td (SECTION 3: CONNECTING TO GLOBALPROTECT CORPORATE VPN) Tj ET
+BT /F2 9.5 Tf 50 417 Td (Access to internal databases, staging environments, and code repositories requires) Tj ET
+BT /F2 9.5 Tf 50 404 Td (connection to the GlobalProtect VPN:) Tj ET
+BT /F2 9.5 Tf 50 385 Td (1. Launch GlobalProtect from the system menu bar.) Tj ET
+BT /F2 9.5 Tf 50 366 Td (2. Enter the portal address: `vpn.nexustech.internal`.) Tj ET
+BT /F2 9.5 Tf 50 347 Td (3. Complete Okta biometric or push notification authentication.) Tj ET
+BT /F2 9.5 Tf 50 328 Td (4. Verify connected status \(blue shield icon\).) Tj ET
+BT /F1 11 Tf 50 299 Td (SECTION 4: REPORTING LOST OR STOLEN HARDWARE) Tj ET
+BT /F2 9.5 Tf 50 278 Td (If a corporate laptop, smartphone, or security token is lost or stolen, you must) Tj ET
+BT /F2 9.5 Tf 50 265 Td (report it to IT Security \(`security@nexustech.internal`\) and your manager within 2) Tj ET
+BT /F2 9.5 Tf 50 252 Td (hours. The IT security team will immediately execute a remote MDM device wipe to) Tj ET
+BT /F2 9.5 Tf 50 239 Td (prevent data compromise.) Tj ET
+BT /F2 8 Tf 50 35 Td (Nexus Enterprise Technologies Inc. - Internal Corporate Document) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002835 00000 n 
+0000002910 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2980
+%%EOF
