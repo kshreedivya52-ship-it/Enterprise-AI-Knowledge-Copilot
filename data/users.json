@@ -78,5 +78,15 @@
     "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
     "role": "editor",
     "department": "finance"
+  },
+  "abcd123": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "hr"
+  },
+  "josh": {
+    "password_hash": "90bfd272bb203f32fe91d7e43a067fe794f671e34d53e09b7250972f67ea9f17",
+    "role": "editor",
+    "department": "legal"
   }
 }
